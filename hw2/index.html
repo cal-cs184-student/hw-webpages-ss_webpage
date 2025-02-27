@@ -316,14 +316,106 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q5/Q5_4.png" width="300px"/>
+				  <img src="Q6/Q6_1.png" width="300px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q5/Q5_5.png" width="300px"/>
+				  <img src="Q6/Q6_2.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+					<img src="Q6/Q6_3.png" width="300px"/>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_4.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_5.png" width="300px"/>
 				</td>
 			  </tr>
 			</table>
-			<caption>screenshots of the mesh before and after a combination of both edge splits and edge flips</caption>
+			<caption>meshes after loop subdivision</caption>
+		</div>
+		I notice that sharp corners and edges are smoothed out after loop subdivision.
+		That's because the new vertices are computed based on the positions of the old vertices and their neighbors, which results in a more rounded shape.
+		To reduce this effect, we can pre-split some edges to add more vertices to the sharp corners and edges before loop subdivision.
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_6.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_7.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+					<img src="Q6/Q6_8.png" width="300px"/>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_9.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_10.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+					<img src="Q6/Q6_11.png" width="300px"/>
+				</td>
+			  </tr>
+			</table>
+			<caption>meshes with pre-split after loop subdivision</caption>
+		</div>
+
+		<b>Q3: </b>
+		Load dae/cube.dae. Perform several iterations of loop subdivision on the cube. Notice that the cube becomes slightly asymmetric after repeated subdivisions. 
+		Can you pre-process the cube with edge flips and splits so that the cube subdivides symmetrically? Document these effects and explain why they occur. Also explain how your pre-processing helps alleviate the effects.
+
+		<b>A3: </b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_12.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_13.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+					<img src="Q6/Q6_14.png" width="300px"/>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_15.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_16.png" width="300px"/>
+				</td>
+			  </tr>
+			</table>
+			<caption>meshes of cube after loop subdivision</caption>
+		</div>
+		After several iterations of loop subdivision, the cube becomes slightly asymmetric due to the initial mesh structure.
+		As we see in the picture below, the neighboring vertices of the cube are not symmetrically distributed.
+		<figure>
+			<img src="Q6/Q6_17.jpg" alt="original cube mesh" style="width:50%"/>
+			<figcaption>original cube mesh</figcaption>
+		</figure>
+		To alleviate this effect, we can pre-process the cube with edge flips and splits to ensure the cube subdivides symmetrically.
+		This is because edge flips and splits help to distribute the vertices more evenly.
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_18.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_19.png" width="300px"/>
+				</td>
+			  </tr>
+			</table>
+			<caption>meshes of cube with pre-split after loop subdivision</caption>
 		</div>
 
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
