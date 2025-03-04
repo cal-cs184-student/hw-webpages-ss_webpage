@@ -48,27 +48,33 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		In this assignment, I implemented various graphics algorithms, including Bezier curves and surfaces, triangle meshes, and the half-edge data structure.<br>
+		For Bezier curves, I implemented de Casteljau's algorithm to evaluate Bezier curves and surfaces.<br>
+		For triangle meshes, I implemented area-weighted vertex normals, edge flip, and edge split operations.<br>
+		Finally, I implemented loop subdivision for mesh upsampling.<br>
+		Throughout the assignment, I learned about the underlying mathematics and data structures used in computer graphics and gained hands-on experience implementing these algorithms.<br>
+		Split boundary edges toubled me a lot……<br>
 
 		<h2>Section I: Bezier Curves and Surfaces</h2>
 
 		<h3>Part 1: Bezier curves with 1D de Casteljau subdivision</h3>
 		
 		<b>Q1: </b>
-		Briefly explain de Casteljau's algorithm and how you implemented it in order to evaluate Bezier curves.
+		Briefly explain de Casteljau's algorithm and how you implemented it in order to evaluate Bezier curves.<br>
 
-		<b>A1: </b>
-		De Casteljau's algorithm is a recursive algorithm that evaluates a Bezier curve at a given parameter value. 
-		It works by linearly interpolating between control points at each level of recursion. 
-		To evaluate a Bezier curve at a parameter value \(t\), we start by linearly interpolating between each pair of control points to get a new set of points. 
-		We then repeat this process until we have a single point left, which is the point on the Bezier curve at parameter value \(t\). 
-
-		In my implementation, I used the function `evaluateStep` to compute a new set of points given the current points and parameter \( t \). 
-		Each point is a 2D vector, and is linearly interpolated between two neighboring points at the previous level. 
-		This process is processed for a loop until only a single point remains.
+		<b>A1: </b><br>
+		De Casteljau's algorithm is a recursive algorithm that evaluates a Bezier curve at a given parameter value. <br>
+		It works by linearly interpolating between control points at each level of recursion. <br>
+		To evaluate a Bezier curve at a parameter value \(t\), we start by linearly interpolating between each pair of control points to get a new set of points. <br>
+		We then repeat this process until we have a single point left, which is the point on the Bezier curve at parameter value \(t\).<br> 
+		<br>
+		In my implementation, I used the function `evaluateStep` to compute a new set of points given the current points and parameter \( t \). <br>
+		Each point is a 2D vector, and is linearly interpolated between two neighboring points at the previous level. <br>
+		This process is processed for a loop until only a single point remains.<br>
+		<br>
 
 		<b>Q2 & Q3: </b>
-		Create your own Bezier curve with 6 control points and show each step / level of the evaluation from the original contral points down to the final evaluated points.
+		Create your own Bezier curve with 6 control points and show each step / level of the evaluation from the original contral points down to the final evaluated points.<br>
 
 		<b>A2 & A3: </b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
@@ -98,6 +104,7 @@
 			</table>
 			<caption>Each step / level of the evaluation</caption>
 		</div>
+		<br>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 				<tr>
@@ -114,9 +121,10 @@
 			</table>
 			<caption>Bezier curve with 6 control points</caption>
 		</div>
+		<br>
 
 		<b>Q4: </b>
-		Show a screenshot of a slightly different Bezier curve by moving the original control points around and modifying the parameter \(t)\ via mouse scrolling.
+		Show a screenshot of a slightly different Bezier curve by moving the original control points around and modifying the parameter \(t\) via mouse scrolling.<br>
 		
 		<b>A4: </b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
@@ -126,190 +134,203 @@
 				  <img src="Q1/Q1_10.png" width="300px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q1/Q_11.png" width="300px"/>
+				  <img src="Q1/Q1_11.png" width="300px"/>
 				</td>
 				<td style="text-align: center;">
 					<img src="Q1/Q1_12.png" width="300px"/>
 				</td>
 			  </tr>
 			</table>
-			<caption>Bezier curve with 6 different control points via mouse draging and modified parameter \(t\) via mouse scrolling</caption>
+			<caption>Bezier curve with 6 different control points via mouse draging <br>and modified parameter t via mouse scrolling</caption>
 		</div>
+		<br>
 
 		<h3>Part 2: Bezier surfaces with separable 1D de Casteljau</h3>
 		
 		<b>Q1: </b>
-		Briefly explain how de Casteljau algorithm extends to Bezier surfaces and how you implemented it in order to evaluate Bezier surfaces.
+		Briefly explain how de Casteljau algorithm extends to Bezier surfaces and how you implemented it in order to evaluate Bezier surfaces.<br>
 
-		<b>A1: </b>
-		First, each row of n control points in the u direction defines a Bezier curve, resulting in n Bezier curves along u.
-		For a given parameter u, we evaluate each of these Bezier curves using the de Casteljau algorithm to obtain n interpolated points.
-		These points form a new set of control points for a "moving curve" in the v direction.
-		By evaluating this new curve at parameter v, we obtain the final point on the Bezier surface.
-		
-		In our implementation, we first define the function evaluateStep, which computes a new set of points given the current set and parameter /(t)/, similar to our approach in part 1. 
-		Then, we implement the iteration function 'evaluate1D' by calling 'evaluateStep' and iterating itself until we get the final evaluated points.
-		Finally, in the 'evaluate' function, we compute n points along the u direction by calling 'evaluate1D' for each row of control points, given the parameter /(u)/.
-		We then evaluate these n points along the v direction to get a Bezier curve in the v direction, which is the final point on the Bezier surface.
-		
+		<b>A1: </b><br>
+		First, each row of n control points in the u direction defines a Bezier curve, resulting in n Bezier curves along u.<br>
+		For a given parameter u, we evaluate each of these Bezier curves using the de Casteljau algorithm to obtain n interpolated points.<br>
+		These points form a new set of control points for a "moving curve" in the v direction.<br>
+		By evaluating this new curve at parameter v, we obtain the final point on the Bezier surface.<br>
+		<br>
+		In our implementation, we first define the function evaluateStep, which computes a new set of points given the current set and parameter \(t\), similar to our approach in part 1. <br>
+		Then, we implement the iteration function 'evaluate1D' by calling 'evaluateStep' and iterating itself until we get the final evaluated points.<br>
+		Finally, in the 'evaluate' function, we compute n points along the u direction by calling 'evaluate1D' for each row of control points, given the parameter \(u\).<br>
+		We then evaluate these n points along the v direction to get a Bezier curve in the v direction, which is the final point on the Bezier surface.<br><br>
+		<br>
+
 		<b>Q2: </b>
-		Show a screenshot of bez/teapot.bez (not .dae) evaluated by your implementation.
+		Show a screenshot of bez/teapot.bez (not .dae) evaluated by your implementation.<br>
 
 		<b>A2: </b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q2/Q2_1.png" width="300px"/>
+				  <img src="Q2/Q2_1.png" width="450px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q2/Q2_2.png" width="300px"/>
+				  <img src="Q2/Q2_2.png" width="450px"/>
 				</td>
 			  </tr>
 			</table>
 			<caption>screenshot of .bez evaluated by my implementation</caption>
 		</div>
+		<br>
 
 		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
 		<h3>Part 3: Area-weighted vertex normals</h3>
 		
 		<b>Q1: </b>
-		Briefly explain how you implemented the area-weighted vertex normals.
+		Briefly explain how you implemented the area-weighted vertex normals.<br>
 
-		<b>A1: </b>
-		Since 'normal()' is a member function of the Vertex class, we use h = halfedge() to get one halfedge of the given vertex.
-		Then, by iterating through the halfedges around the vertex, we get all the triangles that share the vertex.
-		For each triangle, we calculate the normal vector of the triangle by taking the cross product of two edges of the triangle (the length of the norm equals the area of the triangle).
-		We should note that because the direction of halfedge is conterclockwise, we can garentee that the normal vector is pointing outward.
-		Finally, we sum up all the normal vectors of the triangles and normalize the result to get the area-weighted vertex normal.
+		<b>A1: </b><br>
+		Since 'normal()' is a member function of the Vertex class, we use h = halfedge() to get one halfedge of the given vertex.<br>
+		Then, by iterating through the halfedges around the vertex, we get all the triangles that share the vertex.<br>
+		For each triangle, we calculate the normal vector of the triangle by taking the cross product of two edges of the triangle (the length of the norm equals the area of the triangle).<br>
+		We should note that because the direction of halfedge is conterclockwise, we can garentee that the normal vector is pointing outward.<br>
+		Finally, we sum up all the normal vectors of the triangles and normalize the result to get the area-weighted vertex normal.<br>
+		<br>
 
 		<b>Q2: </b>
-		Show screenshots of dae/teapot.dae (not .bez) comparing teapot shading with and without vertex normals. Use Q to toggle default flat shading and Phong shading.
+		Show screenshots of dae/teapot.dae (not .bez) comparing teapot shading with and without vertex normals. Use Q to toggle default flat shading and Phong shading.<br>
 
 		<b>A2: </b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q3/Q3_1.png" width="300px"/>
+				  <img src="Q3/Q3_1.png" width="450px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q3/Q3_2.png" width="300px"/>
+				  <img src="Q3/Q3_2.png" width="450px"/>
 				</td>
 			  </tr>
 			</table>
 			<caption>default flat shading and Phong shading of teapot.dae</caption>
 		</div>
+		<br>
 
 		<h3>Part 4: Edge flip</h3>
 		
 		<b>Q1: </b>
-		Briefly explain how you implemented the edge flip operation and describe any interesting implementation / debugging tricks you have used.
+		Briefly explain how you implemented the edge flip operation and describe any interesting implementation / debugging tricks you have used.<br>
 
 		<b>A1: </b>
-		I use the graph below to help me implement the edge flip operation. 
+		I use the graph below to help me implement the edge flip operation. <br>
 		<figure>
 			<img src="Q4/Q4_1.jpg" alt="mesh image of flip" style="width:50%"/>
 			<figcaption>Half-edge structure before and after edge flip</figcaption>
 		</figure>
-		To implement the edge flip operation, we first check if the edge is a boundary edge or not. If it is a boundary edge, we do not perform the flip operation.
-		I first use h0-h5 to represent the halfedges around the two triangles that share the edge to be flipped, v0,v1,v4,v5 to represent the vertices of the two triangles, f0,f1 to represent the faces of two triangles, just as the graph shows above.
-		Then, according to the changes shown above, I update the halfedge structure of these halfedges, vertices and faces.
-		
+		To implement the edge flip operation, we first check if the edge is a boundary edge or not. If it is a boundary edge, we do not perform the flip operation. <br>
+		I first use h0-h5 to represent the halfedges around the two triangles that share the edge to be flipped, v0,v1,v4,v5 to represent the vertices of the two triangles, f0,f1 to represent the faces of two triangles, just as the graph shows above.<br>
+		Then, according to the changes shown above, I update the halfedge structure of these halfedges, vertices and faces.<br>
+		<br>
+
 		<b>Q2: </b>
-		Show screenshots of the teapot before and after some edge flips.
+		Show screenshots of the teapot before and after some edge flips.<br>
 
 		<b>A2: </b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q4/Q4_2.png" width="300px"/>
+				  <img src="Q4/Q4_2.png" width="450px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q4/Q4_3.png" width="300px"/>
+				  <img src="Q4/Q4_3.png" width="450px"/>
 				</td>
 			  </tr>
 			</table>
 			<caption>screenshots of the teapot before and after some edge flips</caption>
 		</div>
+		<br>
 
 		<b>Q3 & A3: </b>
-		Since I'm familiar with the halfedge data structure and implemented the function carefully, I didn't encounter any significant debugging issues.
+		Since I'm familiar with the halfedge data structure and implemented the function carefully, I didn't encounter any significant debugging issues.<br>
+		<br>
 
 		<h3>Part 5: Edge split</h3>
 		
 		<b>Q1: </b>
-		Briefly explain how you implemented the edge split operation and describe any interesting implementation / debugging tricks you have used.
+		Briefly explain how you implemented the edge split operation and describe any interesting implementation / debugging tricks you have used.<br>
 
 		<b>A1: </b>
-		I first draw a picture to help me understand the edge split operation.
+		I first draw a picture to help me understand the edge split operation.<br>
 		<figure>
 			<img src="Q5/Q5_1.jpg" alt="mesh image of split" style="width:50%"/>
 			<figcaption>Half-edge structure before and after edge split</figcaption>
 		</figure>
-		In this operation, we first check if the edge is a boundary edge or not. If it is a boundary edge, we do not perform the split operation.
-		Otherwise, we create one new vertex at the midpoint of the edge, six new halfedges, three new edges, and two new faces.
-		As the topological relationship shown in the picture above, I update the old and new halfedges, vertices, edges, and faces accordingly.
+		In this operation, we first check if the edge is a boundary edge or not. If it is a boundary edge, we do not perform the split operation.<br>
+		Otherwise, we create one new vertex at the midpoint of the edge, six new halfedges, three new edges, and two new faces.<br>
+		As the topological relationship shown in the picture above, I update the old and new halfedges, vertices, edges, and faces accordingly.<br>
+		<br>
 
 		<b>Q2: </b>
-		Show screenshots of a mesh before and after some edge splits.
+		Show screenshots of a mesh before and after some edge splits.<br>
 
 		<b>A2: </b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q5/Q5_2.png" width="300px"/>
+				  <img src="Q5/Q5_2.png" width="450px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q5/Q5_3.png" width="300px"/>
+				  <img src="Q5/Q5_3.png" width="450px"/>
 				</td>
 			  </tr>
 			</table>
 			<caption>screenshots of the mesh before and after some edge splits</caption>
 		</div>
+		<br>
 
 		<b>Q3 & A3: </b>
-		Show screenshots of a mesh before and after a combination of both edge splits and edge flips.
+		Show screenshots of a mesh before and after a combination of both edge splits and edge flips.<br>
 		
 		<b>A3: </b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q5/Q5_4.png" width="300px"/>
+				  <img src="Q5/Q5_4.png" width="450px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q5/Q5_5.png" width="300px"/>
+				  <img src="Q5/Q5_5.png" width="450px"/>
 				</td>
 			  </tr>
 			</table>
 			<caption>screenshots of the mesh before and after a combination of both edge splits and edge flips</caption>
 		</div>
+		<br>
 
 		<b>Q4 & A4: </b>
-		Since I'm familiar with the halfedge data structure and implemented the function carefully, I didn't encounter any significant debugging issues.
+		Since I'm familiar with the halfedge data structure and implemented the function carefully, I didn't encounter any significant debugging issues.<br>
+		<br>
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
 		
 		<b>Q1: </b>
-		Briefly explain how you implemented the loop subdivision and describe any interesting implementation / debugging tricks you have used.
+		Briefly explain how you implemented the loop subdivision and describe any interesting implementation / debugging tricks you have used.<br>
 
-		<b>A1: </b>
-		Step A: For all the old vertices, we compute the new vertex positions based on the old vertex positions, their degrees, and the positions of the neighboring vertices.
-		For all the old edges, we compute the new vertex positions based on the old vertex positions at the ends of the edge and the positions of the vertices opposite to the edge.
-		Step B: Split each old edge in the mesh into two new edges and label each new edge as 'old' or 'new'.
-		For those 'new' edges that connect one 'old' vertex and one 'new' vertex, we flip the edge.
+		<b>A1: </b><br>
+		Step A: For all the old vertices, we compute the new vertex positions based on the old vertex positions, their degrees, and the positions of the neighboring vertices.<br>
+		For all the old edges, we compute the new vertex positions based on the old vertex positions at the ends of the edge and the positions of the vertices opposite to the edge.<br>
+		Step B: Split each old edge in the mesh into two new edges and label each new edge as 'old' or 'new'.<br>
+		For those 'new' edges that connect one 'old' vertex and one 'new' vertex, we flip the edge.<br>
 		Step C: We update the positions of the old vertices and new vertices computed in Step A.
-
-		At first, I got unexpected results. By comparing my results with the expected results, I found that some of my 'old' edges were flipped incorrectly.
-		Through drawing the mesh, I realized that every split operation generates three new edges, but only two of them are 'new' edges.
-
+		<br>
+		At first, I got unexpected results. By comparing my results with the expected results, I found that some of my 'old' edges were flipped incorrectly.<br>
+		Through drawing the mesh, I realized that every split operation generates three new edges, but only two of them are 'new' edges.<br>
+		<br>
+		
 		<b>Q2: </b>
 		Take some notes, as well as some screenshots, of your observations on how meshes behave after loop subdivision. 
-		What happens to sharp corners and edges? Can you reduce this effect by pre-splitting some edges?
+		What happens to sharp corners and edges? Can you reduce this effect by pre-splitting some edges?<br>
 
 		<b>A2: </b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
@@ -325,20 +346,27 @@
 					<img src="Q6/Q6_3.png" width="300px"/>
 				</td>
 			  </tr>
-			  <tr>
+			</table>			
+		</div>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+		  	<tr>
 				<td style="text-align: center;">
-				  <img src="Q6/Q6_4.png" width="300px"/>
+				  <img src="Q6/Q6_4.png" width="450px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q6/Q6_5.png" width="300px"/>
+				  <img src="Q6/Q6_5.png" width="450px"/>
 				</td>
-			  </tr>
+			</tr>
 			</table>
 			<caption>meshes after loop subdivision</caption>
 		</div>
-		I notice that sharp corners and edges are smoothed out after loop subdivision.
-		That's because the new vertices are computed based on the positions of the old vertices and their neighbors, which results in a more rounded shape.
-		To reduce this effect, we can pre-split some edges to add more vertices to the sharp corners and edges before loop subdivision.
+		<br>
+		I notice that sharp corners and edges are smoothed out after loop subdivision.<br>
+		That's because the new vertices are computed based on the positions of the old vertices and their neighbors, which results in a more rounded shape.<br>
+		To reduce this effect, we can pre-split some edges to add more vertices to the sharp corners and edges before loop subdivision.<br>
+		<br>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -366,10 +394,11 @@
 			</table>
 			<caption>meshes with pre-split after loop subdivision</caption>
 		</div>
+		<br>
 
 		<b>Q3: </b>
 		Load dae/cube.dae. Perform several iterations of loop subdivision on the cube. Notice that the cube becomes slightly asymmetric after repeated subdivisions. 
-		Can you pre-process the cube with edge flips and splits so that the cube subdivides symmetrically? Document these effects and explain why they occur. Also explain how your pre-processing helps alleviate the effects.
+		Can you pre-process the cube with edge flips and splits so that the cube subdivides symmetrically? Document these effects and explain why they occur. Also explain how your pre-processing helps alleviate the effects.<br>
 
 		<b>A3: </b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
@@ -384,22 +413,28 @@
 				<td style="text-align: center;">
 					<img src="Q6/Q6_14.png" width="300px"/>
 				</td>
-			  </tr>
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="Q6/Q6_15.png" width="300px"/>
-				</td>
-				<td style="text-align: center;">
-				  <img src="Q6/Q6_16.png" width="300px"/>
-				</td>
-			  </tr>
-			</table>
-			<caption>meshes of cube after loop subdivision</caption>
+			  </tr>			  
+			</table>			
 		</div>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			<tr>
+			<td style="text-align: center;">
+			  <img src="Q6/Q6_15.png" width="450px"/>
+			</td>
+			<td style="text-align: center;">
+			  <img src="Q6/Q6_16.png" width="450px"/>
+			</td>
+		  </tr>
+		  </table>
+		  <caption>meshes of cube after loop subdivision</caption>
+		</div>
+		<br>
 		After several iterations of loop subdivision, the cube becomes slightly asymmetric due to the initial mesh structure.
 		As we see in the picture below, the neighboring vertices of the cube are not symmetrically distributed.
 		<figure>
-			<img src="Q6/Q6_17.jpg" alt="original cube mesh" style="width:50%"/>
+			<img src="Q6/Q6_17.png" alt="original cube mesh" style="width:50%"/>
 			<figcaption>original cube mesh</figcaption>
 		</figure>
 		To alleviate this effect, we can pre-process the cube with edge flips and splits to ensure the cube subdivides symmetrically.
@@ -408,15 +443,16 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q6/Q6_18.png" width="300px"/>
+				  <img src="Q6/Q6_18.png" width="450px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q6/Q6_19.png" width="300px"/>
+				  <img src="Q6/Q6_19.png" width="450px"/>
 				</td>
 			  </tr>
 			</table>
 			<caption>meshes of cube with pre-split after loop subdivision</caption>
 		</div>
+		<br>
 
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
