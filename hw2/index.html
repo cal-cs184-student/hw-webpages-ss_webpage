@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
@@ -10,10 +11,18 @@
 			.container {
 				margin: 0 auto;
 				padding: 60px 20%;
+				line-height: 1.5;
 			}
 
 			figure {
 				text-align: center;
+			}
+
+			.equal_3_size {
+				width: 100%;
+        		height: auto;
+        		max-width: 300px; /* 设置最大宽度 */
+        		max-height: 350px; /* 设置最大高度 */
 			}
 
 			img {
@@ -21,7 +30,12 @@
 			}
 
 			body {
-				font-family: 'Inter', sans-serif;
+				font-family: 'Lato', sans-serif;
+				line-height: 1.2;
+			}
+
+			p {
+				line-height: 1.2;
 			}
 		</style>
 	</head>
@@ -35,12 +49,9 @@
 		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-ss_webpage/">cal-cs184-student.github.io/hw-webpages-ss_webpage</a>
 
 		<br>
-		
-		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/sp25-hw2-ss">github.com/cal-cs184-student/sp25-hw2-ss</a>
 
 		<figure>
 			<img src="teapot.png" alt="Teapot" style="width:50%"/>
-			<figcaption>You can add images with captions!</figcaption>
 		</figure>
 
 		<!--
@@ -52,8 +63,8 @@
 		For Bezier curves, I implemented de Casteljau's algorithm to evaluate Bezier curves and surfaces.<br>
 		For triangle meshes, I implemented area-weighted vertex normals, edge flip, and edge split operations.<br>
 		Finally, I implemented loop subdivision for mesh upsampling.<br>
+		What's more, I completed boundary split and upsampling with boundaries. I also tried \(\sqrt{3}\) subdivision.<br>
 		Throughout the assignment, I learned about the underlying mathematics and data structures used in computer graphics and gained hands-on experience implementing these algorithms.<br>
-		Split boundary edges toubled me a lot……<br>
 
 		<h2>Section I: Bezier Curves and Surfaces</h2>
 
@@ -63,13 +74,13 @@
 		Briefly explain de Casteljau's algorithm and how you implemented it in order to evaluate Bezier curves.<br>
 
 		<b>A1: </b><br>
-		De Casteljau's algorithm is a recursive algorithm that evaluates a Bezier curve at a given parameter value. <br>
-		It works by linearly interpolating between control points at each level of recursion. <br>
-		To evaluate a Bezier curve at a parameter value \(t\), we start by linearly interpolating between each pair of control points to get a new set of points. <br>
-		We then repeat this process until we have a single point left, which is the point on the Bezier curve at parameter value \(t\).<br> 
+		De Casteljau's algorithm is a recursive algorithm that evaluates a Bezier curve at a given parameter value. 
+		It works by linearly interpolating between control points at each level of recursion. 
+		To evaluate a Bezier curve at a parameter value \(t\), we start by linearly interpolating between each pair of control points to get a new set of points. 
+		We then repeat this process until we have a single point left, which is the point on the Bezier curve at parameter value \(t\).
 		<br>
-		In my implementation, I used the function `evaluateStep` to compute a new set of points given the current points and parameter \( t \). <br>
-		Each point is a 2D vector, and is linearly interpolated between two neighboring points at the previous level. <br>
+		In my implementation, I used the function `evaluateStep()` to compute a new set of points given the current points and parameter \( t \). 
+		Each point is a 2D vector, and is linearly interpolated between two neighboring points at the previous level. 
 		This process is processed for a loop until only a single point remains.<br>
 		<br>
 
@@ -151,15 +162,15 @@
 		Briefly explain how de Casteljau algorithm extends to Bezier surfaces and how you implemented it in order to evaluate Bezier surfaces.<br>
 
 		<b>A1: </b><br>
-		First, each row of n control points in the u direction defines a Bezier curve, resulting in n Bezier curves along u.<br>
-		For a given parameter u, we evaluate each of these Bezier curves using the de Casteljau algorithm to obtain n interpolated points.<br>
-		These points form a new set of control points for a "moving curve" in the v direction.<br>
-		By evaluating this new curve at parameter v, we obtain the final point on the Bezier surface.<br>
+		First, each row of \(n\) control points in the \(u\) direction defines a Bezier curve, resulting in \(n\) Bezier curves along \(u\).
+		For a given parameter \(u\), we evaluate each of these Bezier curves using the de Casteljau algorithm to obtain \(n\) interpolated points.
+		These points form a new set of control points for a "moving curve" in the \(v\) direction.
+		By evaluating this new curve at parameter \(v\), we obtain the final point on the Bezier surface.
 		<br>
-		In our implementation, we first define the function evaluateStep, which computes a new set of points given the current set and parameter \(t\), similar to our approach in part 1. <br>
-		Then, we implement the iteration function 'evaluate1D' by calling 'evaluateStep' and iterating itself until we get the final evaluated points.<br>
-		Finally, in the 'evaluate' function, we compute n points along the u direction by calling 'evaluate1D' for each row of control points, given the parameter \(u\).<br>
-		We then evaluate these n points along the v direction to get a Bezier curve in the v direction, which is the final point on the Bezier surface.<br><br>
+		In my implementation, I first define the function evaluateStep, which computes a new set of points given the current set and parameter \(t\), similar to our approach in part 1. 
+		Then, I implement the iteration function 'evaluate1D()' by calling 'evaluateStep()' and iterating itself until we get the final evaluated points.
+		Finally, in the 'evaluate()' function, I compute \(n\) points along the \(u\) direction by calling 'evaluate1D()' for each row of control points, given the parameter \(u\).
+		I then evaluate these \(n\) points along the \(v\) direction to get a Bezier curve in the \(v\) direction, which is the final point on the Bezier surface.<br>
 		<br>
 
 		<b>Q2: </b>
@@ -170,10 +181,10 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q2/Q2_1.png" width="450px"/>
+				  <img src="Q2/Q2_1.png" height="350px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q2/Q2_2.png" width="450px"/>
+				  <img src="Q2/Q2_2.png" height="350px"/>
 				</td>
 			  </tr>
 			</table>
@@ -189,10 +200,10 @@
 		Briefly explain how you implemented the area-weighted vertex normals.<br>
 
 		<b>A1: </b><br>
-		Since 'normal()' is a member function of the Vertex class, we use h = halfedge() to get one halfedge of the given vertex.<br>
-		Then, by iterating through the halfedges around the vertex, we get all the triangles that share the vertex.<br>
-		For each triangle, we calculate the normal vector of the triangle by taking the cross product of two edges of the triangle (the length of the norm equals the area of the triangle).<br>
-		We should note that because the direction of halfedge is conterclockwise, we can garentee that the normal vector is pointing outward.<br>
+		Since 'normal()' is a member function of the Vertex class, we use h = halfedge() to get one halfedge of the given vertex.
+		Then, by iterating through the halfedges around the vertex, we get all the triangles that share the vertex.
+		For each triangle, we calculate the normal vector of the triangle by taking the cross product of two edges of the triangle (the length of the norm equals the area of the triangle).
+		We should note that because the direction of halfedge is conterclockwise, we can garentee that the normal vector is pointing outward.
 		Finally, we sum up all the normal vectors of the triangles and normalize the result to get the area-weighted vertex normal.<br>
 		<br>
 
@@ -204,10 +215,10 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q3/Q3_1.png" width="450px"/>
+				  <img src="Q3/Q3_1.png" height="350px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q3/Q3_2.png" width="450px"/>
+				  <img src="Q3/Q3_2.png" height="350px"/>
 				</td>
 			  </tr>
 			</table>
@@ -239,10 +250,10 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q4/Q4_2.png" width="450px"/>
+				  <img src="Q4/Q4_2.png" height="350px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q4/Q4_3.png" width="450px"/>
+				  <img src="Q4/Q4_3.png" height="350px"/>
 				</td>
 			  </tr>
 			</table>
@@ -250,7 +261,7 @@
 		</div>
 		<br>
 
-		<b>Q3 & A3: </b>
+		<b>Q3 & A3: </b><br>
 		Since I'm familiar with the halfedge data structure and implemented the function carefully, I didn't encounter any significant debugging issues.<br>
 		<br>
 
@@ -278,10 +289,10 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q5/Q5_2.png" width="450px"/>
+				  <img src="Q5/Q5_2.png" height="350px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q5/Q5_3.png" width="450px"/>
+				  <img src="Q5/Q5_3.png" height="350px"/>
 				</td>
 			  </tr>
 			</table>
@@ -297,10 +308,10 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q5/Q5_4.png" width="450px"/>
+				  <img src="Q5/Q5_4.png" height="350px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q5/Q5_5.png" width="450px"/>
+				  <img src="Q5/Q5_5.png" height="350px"/>
 				</td>
 			  </tr>
 			</table>
@@ -308,8 +319,24 @@
 		</div>
 		<br>
 
-		<b>Q4 & A4: </b>
+		<b>Q4 & A4: </b><br>
 		Since I'm familiar with the halfedge data structure and implemented the function carefully, I didn't encounter any significant debugging issues.<br>
+		<br>
+		
+		<b>Q5: </b>
+		If you have implemented support for boundary edges, show screenshots of your implementation properly handling split operations on boundary edges.<br>
+
+		<b>A5: </b>
+		I used the graph below to help me deal with boundary-split.<br>
+		<figure>
+			<img src="Q5/Q5_6.jpg" alt="mesh image of split" style="width:50%"/>
+			<figcaption>Half-edge structure before and after boundary split</figcaption>
+		</figure>
+		The screenshot below shows the mesh before and after a boundary split operation.<br>
+		<figure>
+			<img src="Q5/Q5_7.jpg" alt="mesh image of split" style="width:50%"/>
+			<figcaption>beetle.bae after boundary split</figcaption>
+		</figure>
 		<br>
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
@@ -318,11 +345,11 @@
 		Briefly explain how you implemented the loop subdivision and describe any interesting implementation / debugging tricks you have used.<br>
 
 		<b>A1: </b><br>
-		Step A: For all the old vertices, we compute the new vertex positions based on the old vertex positions, their degrees, and the positions of the neighboring vertices.<br>
+		Step A: For all the old vertices, we compute the new vertex positions based on the old vertex positions, their degrees, and the positions of the neighboring vertices.<
 		For all the old edges, we compute the new vertex positions based on the old vertex positions at the ends of the edge and the positions of the vertices opposite to the edge.<br>
-		Step B: Split each old edge in the mesh into two new edges and label each new edge as 'old' or 'new'.<br>
+		Step B: Split each old edge in the mesh into two new edges and label each new edge as 'old' or 'new'.
 		For those 'new' edges that connect one 'old' vertex and one 'new' vertex, we flip the edge.<br>
-		Step C: We update the positions of the old vertices and new vertices computed in Step A.
+		Step C: We update the positions of the old vertices and new vertices computed in Step A.<br>
 		<br>
 		At first, I got unexpected results. By comparing my results with the expected results, I found that some of my 'old' edges were flipped incorrectly.<br>
 		Through drawing the mesh, I realized that every split operation generates three new edges, but only two of them are 'new' edges.<br>
@@ -343,7 +370,7 @@
 				  <img src="Q6/Q6_2.png" width="300px"/>
 				</td>
 				<td style="text-align: center;">
-					<img src="Q6/Q6_3.png" width="300px"/>
+				  <img src="Q6/Q6_3.png" width="300px"/>
 				</td>
 			  </tr>
 			</table>			
@@ -388,7 +415,7 @@
 				  <img src="Q6/Q6_10.png" width="300px"/>
 				</td>
 				<td style="text-align: center;">
-					<img src="Q6/Q6_11.png" width="300px"/>
+				  <img src="Q6/Q6_11.png" width="300px"/>
 				</td>
 			  </tr>
 			</table>
@@ -411,7 +438,7 @@
 				  <img src="Q6/Q6_13.png" width="300px"/>
 				</td>
 				<td style="text-align: center;">
-					<img src="Q6/Q6_14.png" width="300px"/>
+				  <img src="Q6/Q6_14.png" width="300px"/>
 				</td>
 			  </tr>			  
 			</table>			
@@ -421,10 +448,10 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			<tr>
 			<td style="text-align: center;">
-			  <img src="Q6/Q6_15.png" width="450px"/>
+			  <img src="Q6/Q6_15.png" height="350px"/>
 			</td>
 			<td style="text-align: center;">
-			  <img src="Q6/Q6_16.png" width="450px"/>
+			  <img src="Q6/Q6_16.png" height="350px"/>
 			</td>
 		  </tr>
 		  </table>
@@ -443,10 +470,10 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="Q6/Q6_18.png" width="450px"/>
+				  <img src="Q6/Q6_18.png" height="350px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="Q6/Q6_19.png" width="450px"/>
+				  <img src="Q6/Q6_19.png" height="350px"/>
 				</td>
 			  </tr>
 			</table>
@@ -454,19 +481,80 @@
 		</div>
 		<br>
 
-		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<b>Q4: </b>
+		If you have implemented any extra credit extensions, explain what you did and document how they work with screenshots.<br>
 
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
+		<b>A4: </b><br>
+		I first complete upsampling with boundaries.<br>
+		For those boundary edges, newtex'position equals to the midpoint of the edge. 
+		For those old vertices on the boundaries, the newpositions of them equal to 3.0/4.0 oldPosition + 1.0/8.0 (prevPosition + nextPosition).<br>
+		The screenshot below shows the mesh before and after loop subdivision.<br>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_20.png" height="350px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_21.png" height="350px"/>
+				</td>
+			  </tr>
+			</table>
+			<caption>beetle.dae before and after loop subdivision</caption>
+		</div>
+		<br>
+		Then, I implement the sqrt(3) subdivision.<br>
+		I first compute all the old vertices' new positions based on the old vertex positions, their degrees, and the positions of the neighboring vertices.
+		Then, I split each old faces in the mesh into three new faces. The new vertice lacates at the center of the old face.
+		After that, I flip all the old edges in the mesh.
+		Finally, I update all the old vertices' positions.<br>
+		The screenshot below shows the mesh before and after sqrt(3) subdivision and the difference between sqrt(3) subdivision and loop division.<br>
+		<div style="display: flex; justify-content: center; align-items: center;">
+			<figure style="margin: 10px; text-align: center;">
+				<img src="Q6/Q6_22.png" width="300px"/>
+				<figcaption>original graph</figcaption>
+			</figure>
+			<figure style="margin: 10px; text-align: center;">
+				<img src="Q6/Q6_23.png" width="300px"/>
+				<figcaption>sqrt(3) subdivision</figcaption>
+			</figure>
+			<figure style="margin: 10px; text-align: center;">
+				<img src="Q6/Q6_24.png" width="300px"/>
+				<figcaption>loop subdivision</figcaption>
+			</figure>
+		</div>
+		<br>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_25.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_26.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+					<img src="Q6/Q6_27.png" width="300px"/>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_28.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="Q6/Q6_29.png" width="300px"/>
+				</td>
+				<td style="text-align: center;">
+					<img src="Q6/Q6_30.png" width="300px"/>
+				  </td>
+			  </tr>
+			</table>
+			<cation>cube.bae after sqit(3) subdivision</cation>
+		</div>
 		</div>
 	</body>
 </html>
