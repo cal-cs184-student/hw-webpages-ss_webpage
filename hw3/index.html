@@ -395,7 +395,20 @@
 		Walk through your implementation of the indirect lighting function.
 		<br>
 
+		<b>A1: </b>
+		In the function <code>at_least_one_bounce_radiance()</code>, it computes both direct and indirect illumination.
+		For indirect illumination, if <code>r_next.depth</code> is within <code>max_ray_depth</code>, it calls <code>at_least_one_bounce_radiance(r_next, i_next)</code> recursively to compute the indirect lighting.
+		If <code>r_next.depth</code> exceeds <code>max_ray_depth</code>, it uses Russian roulette with a probability of 0.35 to decide whether to continue the ray or terminate it.
+		It is worth mentioning that the radiance is accumulated using the formula <code>L_out += L * f * cosTheta / pdf / rr</code>, where <code>rr</code> is the Russian roulette probability.
+		<br>
+		In the function <code>est_radiance_global_illumination()</code>, it computes the <code>zero_bounce_radiance()</code> and <code>at_least_one_bounce_radiance()</code> to obtain the total radiance.
+		
+		<b>Q2: </b>
+		Show some images rendered with global (direct and indirect) illumination. Use 1024 samples per pixel.
+		<br>
 
+		<b>A2: </b>
+		
 		<h2>Part 5: Adaptive Sampling</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
