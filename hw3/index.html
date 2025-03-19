@@ -183,11 +183,115 @@
 
 		<b>Q2: </b>
 		Show images with normal shading for a few large .dae files that you can only render with BVH acceleration.
+		<br>
+
+		<b>A2: </b>
+
+		<b>Q3: </b>
+		Compare rendering times on a few scenes with moderately complex geometries with and without BVH acceleration. Present your results in a one-paragraph analysis.
+		<br>
+
+		<b>A3: </b>
+
+
 		<h2>Part 3: Direct Illumination</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+		<b>Q1: </b>
+		Walk through both implementations of the direct lighting function.
+		<br>
+
+		<b>A1: </b> 
+		In the function <code>DiffuseBSDF::f()</code>, I use Lambertian reflectance to compute the outgoing radiance for diffuse surfaces. The formula is as follows:
+		\[
+		f_r(\omega_o, \omega_i) = \frac{\text{albedo}}{\pi}
+		\]
+		where <code>albedo</code> represents the diffuse reflectance of the surface. 
+		<br><br>
+
+		In the function <code>DiffuseBSDF::sample_f()</code>, I use cosine-weighted sampling to generate a random incoming light direction <code>wi</code>. The probability density function (PDF) is computed as:
+		\[
+		\text{PDF}(\omega_i) = \frac{\cos(\theta)}{\pi}
+		\]
+		where \(\theta\) is the angle between the surface normal and the incoming direction, corresponding to <code>wi->z</code> in object space. The outgoing radiance is computed using <code>f(wo, *wi)</code>. 
+		<br><br>
+
+		In the function <code>zero_bounce_radiance()</code>, I retrieve the emission of the surface using <code>isect.bsdf->get_emission()</code>. 
+		<br><br>
+
+		In the function <code>one_bounce_radiance()</code>, I select either <code>estimate_direct_lighting_hemisphere(r, isect)</code> or <code>estimate_direct_lighting_importance(r, isect)</code>, depending on the value of <code>direct_hemisphere_sample</code>. 
+		<br><br>
+
+		### **Hemisphere Sampling Method** 
+		In <code>estimate_direct_lighting_hemisphere()</code>, I perform the following steps:
+		1. Call <code>isect.bsdf->sample_f(w_out, &wi_d, &pdf)</code> multiple times (equal to <code>num_samples</code>).
+		2. Compute <code>cosTheta = dot(wi_d, Vector3D(0, 0, 1))</code> in object space.
+		3. Construct the next ray <code>r_next</code> with:
+		   - Origin: <code>hit_p</code> (current intersection point).
+		   - Direction: <code>wi_d</code> (sampled incoming light direction).
+		4. If the next intersection is a light source, compute its radiance using <code>isect.bsdf->get_emission()</code> and accumulate the result.
+		5. Finally, normalize the accumulated result by dividing it by <code>num_samples</code>. 
+		<br><br>
+
+		### **Importance Sampling Method** 
+		In <code>estimate_direct_lighting_importance()</code>, I iterate over all the lights in the scene using:
+		<pre><code>for (auto light = scene->lights.begin(); light != scene->lights.end(); light++)</code></pre>
+		For each light source:
+		1. Sample the light using:
+		   <pre><code>Vector3D L = light->sample_L(hit_p, &wi_d, &distToLight, &pdf);</code></pre>
+		2. Compute <code>cosTheta = dot(wi_d, isect.n)</code>.
+		3. Construct the shadow ray <code>r_next</code>:
+		   - Origin: <code>hit_p</code>.
+		   - Direction: <code>wi_d</code>.
+		   - Set <code>r_next.max_t = (double)distToLight - EPS_F</code> to ensure the ray does not extend beyond the light source.
+		4. If the light is not blocked, compute the radiance using Monte Carlo integration:
+		   <pre><code>L_light += L * f * cosTheta / pdf;</code></pre>
+		5. If the light source is a delta light (such as a point light), only one sample is needed instead of multiple samples.
+		6. Finally, normalize the accumulated result by the number of samples.
+		<br>
+
+		In the function <code>est_radiance_global_illumination()</code>, I add <code>zero_bounce_radiance()</code> and <code>one_bounce_radiance()</code> to compute the total radiance.
+
+		<br>
+		Overall, importance sampling improves efficiency by focusing samples only in the directions where light actually comes from, reducing variance compared to uniform hemisphere sampling.
+
+		<b>Q2: </b>
+		Show some images rendered with both implementations of the direct lighting function.
+		<br>
+
+		<b>A2: </b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part3/33_CBbunny_H_16_8.png" width="400px"/>
+				  <figcaption>Hemisphere Sampling</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part3/34_bunny_1_1.png" width="400px"/>
+				  <figcaption>Importance Sampling</figcaption>
+				</td>
+			  </tr> 
+			</table>
+		</div>
+
+		<b>Q3: </b>
+		Focus on one particular scene with at least one area light and compare the noise levels in soft shadows when rendering with 1, 4, 16, and 64 light rays (the -l flag) and with 1 sample per pixel (the -s flag) using light sampling, not uniform hemisphere sampling.
+		<br>
+
+		<b>A3: </b>
+
+		<b>Q4: </b>
+		Compare the results between uniform hemisphere sampling and lighting sampling in a one-paragraph analysis.
+		<br>
+
+		<b>A4: </b>
 
 		<h2>Part 4: Global Illumination</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+		<b>Q1: </b>
+		Walk through your implementation of the indirect lighting function.
+		<br>
+
 
 		<h2>Part 5: Adaptive Sampling</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
