@@ -186,12 +186,61 @@
 		<br>
 
 		<b>A2: </b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part2/2_maxplanck.png" width="400px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part2/2_CBlucy.png" width="400px"/>
+				</td>
+				<caption>Task 1 and Task 2</caption>
+			  </tr> 
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part2/2_CBdragon.png" width="400px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part2/peter.png" width="400px"/>
+				</td>
+				<caption>large .dae files</caption>
+			  </tr>
+			</table>
+		</div>
 
 		<b>Q3: </b>
 		Compare rendering times on a few scenes with moderately complex geometries with and without BVH acceleration. Present your results in a one-paragraph analysis.
 		<br>
 
 		<b>A3: </b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+				<tr>
+					<th>File Name</th>
+					<th>Rendering Time (Without BVH)</th>
+					<th>Rendering Time (With BVH)</th>
+				</tr>
+				<tr>
+					<td>cow.dae</td>
+					<td>0.1721s</td>
+					<td>18.4269s</td>
+				</tr>
+				<tr>
+					<td>beetle.dae</td>
+					<td>0.1255s</td>
+					<td>28.0541s</td>
+				</tr>
+				<tr>
+					<td>teapot.dae</td>
+					<td>0.1333s</td>
+					<td>7.7631s</td>
+				</tr>
+			</table>
+		</div>
+		Overall, the BVH acceleration significantly improved rendering times for complex geometries.
+		For different scenes, the performance gain varied, with some scenes showing a more substantial improvement than others.
+		This may be due to the varying complexity and distribution of primitives in each scene.
 
 
 		<h2>Part 3: Direct Illumination</h2>
@@ -271,6 +320,26 @@
 				  <figcaption>Importance Sampling</figcaption>
 				</td>
 			  </tr> 
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part3/CBbunny_H_64_32.png" width="400px"/>
+				  <figcaption>Hemisphere Sampling</figcaption>
+				</td>
+				<td>
+					<img src="part3/3_bunny_64_32.png" width="400px"/>
+					<figcaption>Importance Sampling</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td>
+					<img src="part3/ww_CBsphere_lam_H_64_32.png" width="400px"/>
+					<figcaption>Hemisphere Sampling</figcaption>
+				</td>
+				<td>
+					<img src="part3/ww_CBsphere_lam_64_32.png" width="400px"/>
+					<figcaption>Importance Sampling</figcaption>	
+				</td>
+			  </tr>
 			</table>
 		</div>
 
@@ -279,12 +348,46 @@
 		<br>
 
 		<b>A3: </b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part3/35_CBbunny_1_1.png" width="400px"/>
+				  <figcaption>1 light ray, 1 sample per pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part3/35_CBbunny_4_1.png" width="400px"/>
+				  <figcaption>4 light rays, 1 sample per pixel</figcaption>
+				</td>
+			  </tr> 
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part3/35_CBbunny_16_1.png" width="400px"/>
+				  <figcaption>16 light rays, 1 sample per pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part3/35_CBbunny_64_1.png" width="400px"/>
+				  <figcaption>64 light rays, 1 sample per pixel</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		Point light sources cause hard shadows, while area light sources create soft shadows.
+		We control the number of samples per pixel to ensure that the noise level is only affected by the number of light rays, not pixel sampling.
+		As we can see from the images, as the number of light rays increases, the noise level decreases significantly. This is because more light rays provide more information about the light distribution, resulting in smoother and more accurate soft shadows.
+		<br>
 
 		<b>Q4: </b>
 		Compare the results between uniform hemisphere sampling and lighting sampling in a one-paragraph analysis.
 		<br>
 
 		<b>A4: </b>
+		In our comparison between uniform hemisphere sampling and light sampling, we observed that uniform hemisphere sampling produces significantly more noise and takes longer to render. 
+		The primary reason for the higher noise is that uniform hemisphere sampling distributes rays evenly in all directions, leading to many samples that contribute little to direct illumination, especially when the area light is relatively small. 
+		This results in inefficient sampling, requiring more rays to converge to a smooth shadow. 
+		On the other hand, light sampling directs rays preferentially toward the light source, ensuring that more samples contribute meaningfully to the illumination calculation. 
+		This improves convergence, reducing noise with fewer samples. 
+		Additionally, because fewer rays are wasted on unimportant directions, light sampling achieves a shorter render time compared to uniform hemisphere sampling while also producing smoother soft shadows.
 
 		<h2>Part 4: Global Illumination</h2>
 
