@@ -10,10 +10,18 @@
 			.container {
 				margin: 0 auto;
 				padding: 60px 20%;
+				line-height: 1.5;
 			}
 
 			figure {
 				text-align: center;
+			}
+
+			.equal_3_size {
+				width: 100%;
+				height: auto;
+				max-width: 300px;
+				max-height: 350px;
 			}
 
 			img {
@@ -21,19 +29,23 @@
 			}
 
 			body {
-				font-family: 'Inter', sans-serif;
+				font-family: 'Lato', sans-serif;
+				line-height: 1.2;
+			}
+
+			p {
+				line-height: 1.2;
 			}
 		</style>
 	</head>
 	<body>
 		<div class="container">
 		<h1>CS184/284A Spring 2025 Homework 3 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+		<div style="text-align: center;">Names: Shuang Liu</div>
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-ss_webpage/">cal-cs184-student.github.io/hw-webpages-ss_webpage</a>
 		
 		<figure>
 			<img src="cornell.png" alt="Cornell Boxes with Bunnies" style="width:70%"/>
@@ -48,37 +60,129 @@
 		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
 
 		<h2>Part 1: Ray Generation and Scene Intersection</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		
+		<b>Q1: </b>
+		Walk through the ray generation and primitive intersection parts of the rendering pipeline.
+		<br>
+		<b>A1: </b>
+		<b>ray generation</b><br>
+		Given a pixel coordinate (x, y) in the image plane, we generate a camera ray originating from the camera position and passing through the corresponding point on the sensor plane in camera space. 
+		This ray is initially defined in camera space, and we transform it into world space using the camera-to-world (c2w) transformation matrix. <br>
+		To estimate the integral of radiance over a pixel, we perform supersampling by generating ns_aa random sample points within the pixel area. 
+		For each sample point, we invoke 'generate_ray()' to generate a corresponding ray in world space. 
+		We then call 'est_radiance_global_illumination(Ray r)' multiple times to compute the radiance along these sampled rays. 
+		The final pixel value is obtained by averaging these radiance estimates, and the result is stored in sampleBuffer. <br>
+		<b>primitive intersection</b><br>
+		For each generated ray, we check for intersections with scene primitives such as triangles and spheres.<br>
+		In the function 'bool Triangle::has_intersection()', we use the Möller-Trumbore algorithm to determine whether the ray intersects the triangle within the valid range r.min_t and r.max_t.
+		In the function 'Trianfle::intersect()', If an intersection occurs, we update the intersection record with the corresponding hit information.<br>
+		The intersection test for spheres follows a similar approach, using the quadratic equation derived from the implicit sphere equation. If the ray intersects the sphere within the valid range, we update the intersection record accordingly.<br>
+		<br>
 
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
+		<b>Q2: </b>
+		Explain the triangle intersection algorithm you implemented in your own words.
+		<br>
+
+		<b>A2: </b>
+		The Möller-Trumbore algorithm is a fast and efficient method for determining whether a ray intersects a triangle in 3D space. The algorithm works as follows:<br>
+		1. Compute the edges of the triangle by subtracting the vertex positions:
+		\[
+   		E1 = p2 - p1, \quad E2 = p3 - p1
+   		\]<br>
+		2. Compute the vector from origin of the ray to the triangle vertex:
+		\[
+   		S = r.o - p1
+   		\]<br>
+		3. Compute auxiliary vectors using the cross product:  
+		\[
+   		S1 = cross(r.d, E2), \quad S2 = cross(S, E1)
+   		\]<br>
+		4. Solve for intersection parameters using the determinant method:  
+		\[
+		\text{tri\_test} = \frac{1}{\text{dot}(S1, E1)} \times  
+		\begin{bmatrix}  
+		\text{dot}(S2, E2) \\  
+		\text{dot}(S1, S) \\  
+		\text{dot}(r.d, S2)  
+		\end{bmatrix}
+		\]<br>
+		5. Extract the intersection parameters:
+		\[
+   		t = \text{tri\_test}.x, \quad b2 = \text{tri\_test}.y, \quad b3 = \text{tri\_test}.z, \quad b1 = 1 - b2 - b3
+   		\]<br>
+		6. If \( r.min\_t < t < r.max\_t \) and \( b_1, b_2, b_3 \) are all greater than zero, then the ray intersects the triangle. <br>
+		7. If an intersection occurs, update the intersection record with hit information:  
+   		```cpp
+   		r.max_t = t;
+   		isect->t = t;
+   		isect->n = b1 * n1 + b2 * n2 + b3 * n3;
+   		isect->primitive = this;
+   		isect->bsdf = get_bsdf();
+   		```<br>
+		8. Return true if an intersection is found; otherwise, return false.<br>
+		<br>
+
+		<b>Q3: </b>
+		Show images with normal shading for a few small .dae files.
+		<br>
+
+		<b>A3: </b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="part1/banana.png" width="400px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="part1/CBempty.png" width="400px"/>
 				</td>
-			  </tr>
+				<caption>Task 1 and Task 2</caption>
+			  </tr> 
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="part1/CBempty_t1p3.png" width="400px"/>
 				</td>
 				<td style="text-align: center;">
-				  <img src="cornell.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
+				  <img src="part1/CBempty_t1p4.png" width="400px"/>
 				</td>
+				<caption>Task 3 and Task 4</caption>
 			  </tr>
 			</table>
 		</div>
 		
 		<h2>Part 2: Bounding Volume Hierarchy</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		
+		<b>Q1: </b>
+		Walk through your BVH construction algorithm. 
+		Explain the heuristic you chose for picking the splitting point.
+		<br>
 
+		<b>A1: </b>
+		The BVH (Bounding Volume Hierarchy) construction follows a top-down recursive approach. The algorithm proceeds as follows:  <br>
+		1. For each primitive in the scene, I compute its bounding box using the function <code>get_bbox()</code>.
+		Then, I create a global bounding box that encompasses all the primitives by iteratively expanding it to include each primitive's bounding box.  
+		This global bounding box serves as the root node of the BVH tree. <br>
+		2. If the number of primitives in the current node is less than or equal to the given <code>max_leaf_size</code>, the node is designated as a leaf node, and the recursion stops.  
+		Otherwise, the node needs to be split into two child nodes to improve spatial partitioning.  <br>
+		3. To decide the splitting axis, I consider all three coordinate axes (x, y, and z). 
+		For each axis, I calculate the centroid of all primitives' bounding boxes and use it as an approximate midpoint for partitioning.
+		I then evaluate the efficiency of splitting along each axis using a heuristic and choose the axis that yields the best partitioning.  
+		4. The heuristic I use is inspired by the Surface Area Heuristic (SAH), which aims to minimize the expected cost of ray traversal by balancing the number of primitives and their spatial distribution.  <br>
+		The cost function is computed as:  
+		\[
+		C = NL \times AL + NR \times AR
+		\]
+		where:  
+		- \(NL\) and \(NR\) are the number of primitives in the left and right child nodes, respectively.  
+		- \(AL\) and \(AR\) are the surface areas of the bounding boxes of the left and right child nodes, respectively. 
+		The goal is to find the axis and split point that minimize \(C\), leading to a more efficient BVH structure. <br>
+		5. After determining the best splitting axis, I divide the list of primitives into two halves based on their centroids along the chosen axis.
+		6. After splitting the primitives, I recursively call <code>construct_bvh()</code> on the left and right subsets to build the BVH tree Hierarchically. <br>
+		7. The process continues until all nodes contain at most <code>max_leaf_size</code> primitives, resulting in a balanced BVH structure that optimizes ray traversal efficiency. <br>
+		<br>
+
+		<b>Q2: </b>
+		Show images with normal shading for a few large .dae files that you can only render with BVH acceleration.
 		<h2>Part 3: Direct Illumination</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
