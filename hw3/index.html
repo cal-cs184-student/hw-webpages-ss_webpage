@@ -408,9 +408,143 @@
 		<br>
 
 		<b>A2: </b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part4/4_CBbunny_m0_s1024.png" width="400px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part4/4_spheres_1024.png" width="400px"/>
+				</td>
+			  </tr> 
+			</table>
+		</div>
+
+		<b>Q3: </b>
+		Pick one scene and compare rendered views first with only direct illumination, then only indirect illumination. Use 1024 samples per pixel.
+		<br>
+
+		<b>A3: </b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part4/spheres_direct_s1024.png" width="400px"/>
+				  <figcaption>Direct Illumination</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part4/4_CBbunny_m1_s1024.png" width="400px"/>
+				  <figcaption>Indirect Illumination</figcaption>
+				</td>
+			  </tr> 
+			</table>
+		</div>
+
+		<b>Q4: </b>
+		For CBbunny.dae, render the mth bounce of light with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag), and isAccumBounces=false. Explain in your write-up what you see for the 2nd and 3rd bounce of light, and how it contributes to the quality of the rendered image compared to rasterization. Use 1024 samples per pixel.
+		<br>
+
+		<b>A4: </b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part4/CBbunny_mat0_s1024.png" width="400px"/>
+				  <figcaption>0st Bounce of Light</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part4/CBbunny_mat1_s1024.png" width="400px"/>
+				  <figcaption>1st Bounce of Light</figcaption>
+				</td>
+			  </tr> 
+			</table>
+		</div>
+
+		<figure>
+			<img src="part4/4_CBbunny_m0_s1024.png" alt="bunny-accu" style="width:70%"/>
+			<figcaption>accumulated</figcaption>
+		</figure>
 		
+		<b>Q5: </b>
+		For CBbunny.dae, output the Russian Roulette rendering with max_ray_depth set to 0, 1, 2, 3, 4, and 100(the -m flag). Use 1024 samples per pixel.
+		<br>
+
+		<b>A5: </b>
+
+
+		<b>Q6: </b>
+		Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.
+		<br>
+
+		<b>A6: </b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part4/4_spheres_s1_l4.png" width="400px"/>
+				  <figcaption>1 sample per pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part4/4_spheres_s2_l4.png" width="400px"/>
+				  <figcaption>2 sample per pixel</figcaption>
+				</td>
+			  </tr> 
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part4/4_spheres_s4_l4.png" width="400px"/>
+				  <figcaption>4 sample per pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part4/4_spheres_s8_l4.png" width="400px"/>
+				  <figcaption>8 sample per pixel</figcaption>
+				</td>
+			  </tr> 
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part4/4_spheres_s16_l4.png" width="400px"/>
+				  <figcaption>16 sample per pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part4/4_spheres_s1024_l4.png" width="400px"/>
+				  <figcaption>1024 sample per pixel</figcaption>
+				</td>
+			  </tr> 
+			</table>
+		</div>
+
 		<h2>Part 5: Adaptive Sampling</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		
+		<b>Q1: </b>
+		Explain adaptive sampling. Walk through your implementation of the adaptive sampling.
+		<br>
+
+		<b>A1: </b>
+
+		<b>Q2: </b>
+		Pick two scenes and render them with at least 2048 samples per pixel.
+		<br>
+
+		<b>A2: </b>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part5/5_bunny_rate.png" width="400px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part5/5_bunny.png" width="400px"/>
+				</td>
+			  </tr> 
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part5/a_sphere_s8_rate.png" width="400px"/>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part5/a_sphere_s8.png" width="400px"/>
+				</td>
+			  </tr>
+			</table>
 
 		<h2>(Optional) Part 6: Extra Credit Opportunities</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
