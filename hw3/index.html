@@ -11,6 +11,7 @@
 				margin: 0 auto;
 				padding: 60px 20%;
 				line-height: 1.5;
+				max-width: 1200px;
 			}
 
 			figure {
@@ -31,17 +32,31 @@
 			body {
 				font-family: 'Lato', sans-serif;
 				line-height: 1.2;
+				margin: 0; /* 移除默认的页边距 */
+            	padding: 0; /* 移除默认的内边距 */
+				font-size: 16px;
 			}
 
 			p {
 				line-height: 1.2;
 			}
+
+			pre code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            display: block;
+            white-space: pre-wrap;
+        	}
+
 		</style>
 	</head>
 	<body>
 		<div class="container">
 		<h1>CS184/284A Spring 2025 Homework 3 Write-Up</h1>
-		<div style="text-align: center;">Names: Shuang Liu</div>
+		<div style="text-align: center;">Name: Shuang Liu</div>
 
 		<br>
 
@@ -49,7 +64,6 @@
 		
 		<figure>
 			<img src="cornell.png" alt="Cornell Boxes with Bunnies" style="width:70%"/>
-			<figcaption>You can add images with captions!</figcaption>
 		</figure>
 
 		<!--
@@ -57,25 +71,30 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
-
+		In this homework, we implemented a ray tracer that supports ray generation, scene intersection for triangles and spheres, bounding volume hierarchy (BVH), direct illumination, global illumination and adaptive sampling.<br>
+		Testing intersection through BVH highly improved the performance of our ray tracer, especially for complex geometries. 
+		In 'direct illumination' part, we accumulate 0th bounce (light source) and 1st bounce (reflection directly from light source). We also implemented both hemisphere sampling and light sampling, and compared their results. 
+		In 'global illumination' part, we implemented the indirect lighting function which is recursively called to simulate multiple bounces of light. We also used Russian roulette to terminate the recursion to get unbiased estimation and avoid computing endlessly. 
+		Finally, we use adaptive sampling to balance the rendering quality and expense by focusing on areas with high variance, resulting in a more efficient and visually appealing image.<br>
+		<br>
+		
 		<h2>Part 1: Ray Generation and Scene Intersection</h2>
 		
 		<b>Q1: </b>
 		Walk through the ray generation and primitive intersection parts of the rendering pipeline.
 		<br>
-		<b>A1: </b>
+		<b>A1: </b><br>
 		<b>ray generation</b><br>
-		Given a pixel coordinate (x, y) in the image plane, we generate a camera ray originating from the camera position and passing through the corresponding point on the sensor plane in camera space. 
-		This ray is initially defined in camera space, and we transform it into world space using the camera-to-world (c2w) transformation matrix. <br>
-		To estimate the integral of radiance over a pixel, we perform supersampling by generating ns_aa random sample points within the pixel area. 
-		For each sample point, we invoke 'generate_ray()' to generate a corresponding ray in world space. 
-		We then call 'est_radiance_global_illumination(Ray r)' multiple times to compute the radiance along these sampled rays. 
+		Given a pixel coordinate <code>(x, y)</code> in the image plane, we generate a camera ray originating from the camera position and passing through the corresponding point on the sensor plane in camera space. 
+		This ray is initially defined in camera space, and we transform it into world space using the camera-to-world (<code>c2w</code>) transformation matrix. <br>
+		To estimate the integral of radiance over a pixel, we perform supersampling by generating <code>ns_aa</code> random sample points within the pixel area. 
+		For each sample point, we invoke <code>generate_ray()</code> to generate a corresponding ray in world space. 
+		We then call <code>est_radiance_global_illumination(Ray r)</code> multiple times to compute the radiance along these sampled rays. 
 		The final pixel value is obtained by averaging these radiance estimates, and the result is stored in sampleBuffer. <br>
 		<b>primitive intersection</b><br>
 		For each generated ray, we check for intersections with scene primitives such as triangles and spheres.<br>
-		In the function 'bool Triangle::has_intersection()', we use the Möller-Trumbore algorithm to determine whether the ray intersects the triangle within the valid range r.min_t and r.max_t.
-		In the function 'Trianfle::intersect()', If an intersection occurs, we update the intersection record with the corresponding hit information.<br>
+		In the function <code>bool Triangle::has_intersection()</code>, we use the Möller-Trumbore algorithm to determine whether the ray intersects the triangle within the valid range <code>r.min_t</code> and <code>r.max_t</code>.
+		In the function <code>Trianfle::intersect()</code>, if an intersection occurs, we update the intersection record with the corresponding hit information.<br>
 		The intersection test for spheres follows a similar approach, using the quadratic equation derived from the implicit sphere equation. If the ray intersects the sphere within the valid range, we update the intersection record accordingly.<br>
 		<br>
 
@@ -83,7 +102,7 @@
 		Explain the triangle intersection algorithm you implemented in your own words.
 		<br>
 
-		<b>A2: </b>
+		<b>A2: </b><br>
 		The Möller-Trumbore algorithm is a fast and efficient method for determining whether a ray intersects a triangle in 3D space. The algorithm works as follows:<br>
 		1. Compute the edges of the triangle by subtracting the vertex positions:
 		\[
@@ -99,7 +118,7 @@
    		\]<br>
 		4. Solve for intersection parameters using the determinant method:  
 		\[
-		\text{tri\_test} = \frac{1}{\text{dot}(S1, E1)} \times  
+		\text{tri_test} = \frac{1}{\text{dot}(S1, E1)} \times  
 		\begin{bmatrix}  
 		\text{dot}(S2, E2) \\  
 		\text{dot}(S1, S) \\  
@@ -108,17 +127,18 @@
 		\]<br>
 		5. Extract the intersection parameters:
 		\[
-   		t = \text{tri\_test}.x, \quad b2 = \text{tri\_test}.y, \quad b3 = \text{tri\_test}.z, \quad b1 = 1 - b2 - b3
+   		t = \text{tri_test}.x, \quad b2 = \text{tri_test}.y, \quad b3 = \text{tri_test}.z, \quad b1 = 1 - b2 - b3
    		\]<br>
 		6. If \( r.min\_t < t < r.max\_t \) and \( b_1, b_2, b_3 \) are all greater than zero, then the ray intersects the triangle. <br>
 		7. If an intersection occurs, update the intersection record with hit information:  
-   		```cpp
+		<pre><code class="language-cpp">
    		r.max_t = t;
    		isect->t = t;
    		isect->n = b1 * n1 + b2 * n2 + b3 * n3;
    		isect->primitive = this;
    		isect->bsdf = get_bsdf();
-   		```<br>
+		</code></pre>
+		<br>
 		8. Return true if an intersection is found; otherwise, return false.<br>
 		<br>
 
@@ -129,26 +149,29 @@
 		<b>A3: </b>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="part1/banana.png" width="400px"/>
-				</td>
-				<td style="text-align: center;">
-				  <img src="part1/CBempty.png" width="400px"/>
-				</td>
-				<caption>Task 1 and Task 2</caption>
-			  </tr> 
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="part1/CBempty_t1p3.png" width="400px"/>
-				</td>
-				<td style="text-align: center;">
-				  <img src="part1/CBempty_t1p4.png" width="400px"/>
-				</td>
-				<caption>Task 3 and Task 4</caption>
-			  </tr>
+				<tr>
+					<td style="text-align: center;">
+						<img src="part1/banana.png" width="400px"/>
+						<figcaption>Task 1 and Task 2</figcaption>
+					</td>
+					<td style="text-align: center;">
+						<img src="part1/CBempty.png" width="400px"/>
+						<figcaption>Task 1 and Task 2</figcaption>
+					</td>
+				</tr> 
+				<tr>
+					<td style="text-align: center;">
+						<img src="part1/CBempty_t1p3.png" width="400px"/>
+						<figcaption>Task 3</figcaption>
+					</td>
+					<td style="text-align: center;">
+						<img src="part1/CBempty_t1p4.png" width="400px"/>
+						<figcaption>Task 4</figcaption>
+					</td>
+				</tr>
 			</table>
 		</div>
+		<br>
 		
 		<h2>Part 2: Bounding Volume Hierarchy</h2>
 		
@@ -157,7 +180,7 @@
 		Explain the heuristic you chose for picking the splitting point.
 		<br>
 
-		<b>A1: </b>
+		<b>A1: </b><br>
 		The BVH (Bounding Volume Hierarchy) construction follows a top-down recursive approach. The algorithm proceeds as follows:  <br>
 		1. For each primitive in the scene, I compute its bounding box using the function <code>get_bbox()</code>.
 		Then, I create a global bounding box that encompasses all the primitives by iteratively expanding it to include each primitive's bounding box.  
@@ -166,17 +189,17 @@
 		Otherwise, the node needs to be split into two child nodes to improve spatial partitioning.  <br>
 		3. To decide the splitting axis, I consider all three coordinate axes (x, y, and z). 
 		For each axis, I calculate the centroid of all primitives' bounding boxes and use it as an approximate midpoint for partitioning.
-		I then evaluate the efficiency of splitting along each axis using a heuristic and choose the axis that yields the best partitioning.  
+		I then evaluate the efficiency of splitting along each axis using a heuristic and choose the axis that yields the best partitioning.  <br>
 		4. The heuristic I use is inspired by the Surface Area Heuristic (SAH), which aims to minimize the expected cost of ray traversal by balancing the number of primitives and their spatial distribution.  <br>
 		The cost function is computed as:  
 		\[
 		C = NL \times AL + NR \times AR
 		\]
-		where:  
-		- \(NL\) and \(NR\) are the number of primitives in the left and right child nodes, respectively.  
-		- \(AL\) and \(AR\) are the surface areas of the bounding boxes of the left and right child nodes, respectively. 
+		&nbsp;&nbsp;&nbsp;&nbsp;where:  
+		\(NL\) and \(NR\) are the number of primitives in the left and right child nodes, respectively.  
+		\(AL\) and \(AR\) are the surface areas of the bounding boxes of the left and right child nodes, respectively. <br>
 		The goal is to find the axis and split point that minimize \(C\), leading to a more efficient BVH structure. <br>
-		5. After determining the best splitting axis, I divide the list of primitives into two halves based on their centroids along the chosen axis.
+		5. After determining the best splitting axis, I divide the list of primitives into two halves based on their centroids along the chosen axis.<br>
 		6. After splitting the primitives, I recursively call <code>construct_bvh()</code> on the left and right subsets to build the BVH tree Hierarchically. <br>
 		7. The process continues until all nodes contain at most <code>max_leaf_size</code> primitives, resulting in a balanced BVH structure that optimizes ray traversal efficiency. <br>
 		<br>
@@ -195,7 +218,6 @@
 				<td style="text-align: center;">
 				  <img src="part2/2_CBlucy.png" width="400px"/>
 				</td>
-				<caption>Task 1 and Task 2</caption>
 			  </tr> 
 			  <tr>
 				<td style="text-align: center;">
@@ -203,11 +225,12 @@
 				</td>
 				<td style="text-align: center;">
 				  <img src="part2/peter.png" width="400px"/>
-				</td>
-				<caption>large .dae files</caption>
+				</td>			
 			  </tr>
 			</table>
+			<caption>large .dae files</caption>
 		</div>
+		<br>
 
 		<b>Q3: </b>
 		Compare rendering times on a few scenes with moderately complex geometries with and without BVH acceleration. Present your results in a one-paragraph analysis.
@@ -238,9 +261,11 @@
 				</tr>
 			</table>
 		</div>
+		<br>
 		Overall, the BVH acceleration significantly improved rendering times for complex geometries.
 		For different scenes, the performance gain varied, with some scenes showing a more substantial improvement than others.
 		This may be due to the varying complexity and distribution of primitives in each scene.
+		<br>
 
 
 		<h2>Part 3: Direct Illumination</h2>
@@ -249,7 +274,7 @@
 		Walk through both implementations of the direct lighting function.
 		<br>
 
-		<b>A1: </b> 
+		<b>A1: </b> <br>
 		In the function <code>DiffuseBSDF::f()</code>, I use Lambertian reflectance to compute the outgoing radiance for diffuse surfaces. The formula is as follows:
 		\[
 		f_r(\omega_o, \omega_i) = \frac{\text{albedo}}{\pi}
@@ -270,38 +295,39 @@
 		In the function <code>one_bounce_radiance()</code>, I select either <code>estimate_direct_lighting_hemisphere(r, isect)</code> or <code>estimate_direct_lighting_importance(r, isect)</code>, depending on the value of <code>direct_hemisphere_sample</code>. 
 		<br><br>
 
-		### **Hemisphere Sampling Method** 
-		In <code>estimate_direct_lighting_hemisphere()</code>, I perform the following steps:
-		1. Call <code>isect.bsdf->sample_f(w_out, &wi_d, &pdf)</code> multiple times (equal to <code>num_samples</code>).
-		2. Compute <code>cosTheta = dot(wi_d, Vector3D(0, 0, 1))</code> in object space.
-		3. Construct the next ray <code>r_next</code> with:
-		   - Origin: <code>hit_p</code> (current intersection point).
-		   - Direction: <code>wi_d</code> (sampled incoming light direction).
-		4. If the next intersection is a light source, compute its radiance using <code>isect.bsdf->get_emission()</code> and accumulate the result.
-		5. Finally, normalize the accumulated result by dividing it by <code>num_samples</code>. 
-		<br><br>
+		<b>Hemisphere Sampling Method</b><br>
+		In <code>estimate_direct_lighting_hemisphere()</code>, I perform the following steps:<br>
+		1. Call <code>isect.bsdf->sample_f(w_out, &wi_d, &pdf)</code> multiple times (equal to <code>num_samples</code>).<br>
+		2. Compute <code>cosTheta = dot(wi_d, Vector3D(0, 0, 1))</code> in object space.<br>
+		3. Construct the next ray <code>r_next</code> with:<br>
+		&nbsp;&nbsp;Origin: <code>hit_p</code> (current intersection point).<br>
+		&nbsp;&nbsp;Direction: <code>wi_d</code> (sampled incoming light direction).<br>
+		4. If the next intersection is a light source, compute its radiance using <code>isect.bsdf->get_emission()</code> and accumulate the result.<br>
+		5. Finally, normalize the accumulated result by dividing it by <code>num_samples</code>. <br>
+		<br>
 
-		### **Importance Sampling Method** 
+		<b>Importance Sampling Method</b><br>
 		In <code>estimate_direct_lighting_importance()</code>, I iterate over all the lights in the scene using:
 		<pre><code>for (auto light = scene->lights.begin(); light != scene->lights.end(); light++)</code></pre>
-		For each light source:
+		For each light source:<br>
 		1. Sample the light using:
 		   <pre><code>Vector3D L = light->sample_L(hit_p, &wi_d, &distToLight, &pdf);</code></pre>
-		2. Compute <code>cosTheta = dot(wi_d, isect.n)</code>.
-		3. Construct the shadow ray <code>r_next</code>:
-		   - Origin: <code>hit_p</code>.
-		   - Direction: <code>wi_d</code>.
-		   - Set <code>r_next.max_t = (double)distToLight - EPS_F</code> to ensure the ray does not extend beyond the light source.
-		4. If the light is not blocked, compute the radiance using Monte Carlo integration:
+		2. Compute <code>cosTheta = dot(wi_d, isect.n)</code>.<br>
+		3. Construct the shadow ray <code>r_next</code>:<br>
+		&nbsp;&nbsp;Origin: <code>hit_p</code>.<br>
+		&nbsp;&nbsp;Direction: <code>wi_d</code>.<br>
+		&nbsp;&nbsp;Set <code>r_next.max_t = (double)distToLight - EPS_F</code> to ensure the ray does not extend beyond the light source.<br>
+		4. If the light is not blocked, compute the radiance using Monte Carlo integration:<br>
 		   <pre><code>L_light += L * f * cosTheta / pdf;</code></pre>
-		5. If the light source is a delta light (such as a point light), only one sample is needed instead of multiple samples.
+		5. If the light source is a delta light (such as a point light), only one sample is needed instead of multiple samples.<br>
 		6. Finally, normalize the accumulated result by the number of samples.
 		<br>
 
-		In the function <code>est_radiance_global_illumination()</code>, I add <code>zero_bounce_radiance()</code> and <code>one_bounce_radiance()</code> to compute the total radiance.
+		In the function <code>est_radiance_global_illumination()</code>, I add <code>zero_bounce_radiance()</code> and <code>one_bounce_radiance()</code> to compute the total radiance.<br>
 
 		<br>
-		Overall, importance sampling improves efficiency by focusing samples only in the directions where light actually comes from, reducing variance compared to uniform hemisphere sampling.
+		Overall, importance sampling improves efficiency by focusing samples only in the directions where light actually comes from, reducing variance compared to uniform hemisphere sampling.<br>
+		<br>
 
 		<b>Q2: </b>
 		Show some images rendered with both implementations of the direct lighting function.
@@ -342,6 +368,7 @@
 			  </tr>
 			</table>
 		</div>
+		<br>
 
 		<b>Q3: </b>
 		Focus on one particular scene with at least one area light and compare the noise levels in soft shadows when rendering with 1, 4, 16, and 64 light rays (the -l flag) and with 1 sample per pixel (the -s flag) using light sampling, not uniform hemisphere sampling.
@@ -372,22 +399,25 @@
 			  </tr>
 			</table>
 		</div>
+		<br>
 		Point light sources cause hard shadows, while area light sources create soft shadows.
 		We control the number of samples per pixel to ensure that the noise level is only affected by the number of light rays, not pixel sampling.
 		As we can see from the images, as the number of light rays increases, the noise level decreases significantly. This is because more light rays provide more information about the light distribution, resulting in smoother and more accurate soft shadows.
+		<br>
 		<br>
 
 		<b>Q4: </b>
 		Compare the results between uniform hemisphere sampling and lighting sampling in a one-paragraph analysis.
 		<br>
 
-		<b>A4: </b>
+		<b>A4: </b><br>
 		In our comparison between uniform hemisphere sampling and light sampling, we observed that uniform hemisphere sampling produces significantly more noise and takes longer to render. 
 		The primary reason for the higher noise is that uniform hemisphere sampling distributes rays evenly in all directions, leading to many samples that contribute little to direct illumination, especially when the area light is relatively small. 
 		This results in inefficient sampling, requiring more rays to converge to a smooth shadow. 
 		On the other hand, light sampling directs rays preferentially toward the light source, ensuring that more samples contribute meaningfully to the illumination calculation. 
 		This improves convergence, reducing noise with fewer samples. 
 		Additionally, because fewer rays are wasted on unimportant directions, light sampling achieves a shorter render time compared to uniform hemisphere sampling while also producing smoother soft shadows.
+		<br>
 
 		<h2>Part 4: Global Illumination</h2>
 
@@ -395,14 +425,16 @@
 		Walk through your implementation of the indirect lighting function.
 		<br>
 
-		<b>A1: </b>
-		In the function <code>at_least_one_bounce_radiance()</code>, it computes both direct and indirect illumination.
-		For indirect illumination, if <code>r_next.depth</code> is within <code>max_ray_depth</code>, it calls <code>at_least_one_bounce_radiance(r_next, i_next)</code> recursively to compute the indirect lighting.
-		If <code>r_next.depth</code> exceeds <code>max_ray_depth</code>, it uses Russian roulette with a probability of 0.35 to decide whether to continue the ray or terminate it.
+		<b>A1: </b><br>
+		In the function <code>at_least_one_bounce_radiance()</code>, it computes both direct and indirect illumination.<br>
+		For indirect illumination, if <code>r_next.depth</code> is within <code>max_ray_depth</code>, it uses Russian roulette with a probability of 0.35 to decide whether to continue the ray or terminate it. 
+		If it continues, it calls <code>at_least_one_bounce_radiance(r_next, i_next)</code> recursively to compute the indirect lighting.
+		If <code>r_next.depth</code> exceeds <code>max_ray_depth</code>, it stops.
 		It is worth mentioning that the radiance is accumulated using the formula <code>L_out += L * f * cosTheta / pdf / rr</code>, where <code>rr</code> is the Russian roulette probability.
-		<br>
+		<br><br>
 		In the function <code>est_radiance_global_illumination()</code>, it computes the <code>zero_bounce_radiance()</code> and <code>at_least_one_bounce_radiance()</code> to obtain the total radiance.
-		
+		<br><br>
+
 		<b>Q2: </b>
 		Show some images rendered with global (direct and indirect) illumination. Use 1024 samples per pixel.
 		<br>
@@ -435,7 +467,9 @@
 				</td>
 			  </tr>
 			</table>
+			<caption>Global (direct and indirect) illumination</caption>
 		</div>
+		<br>
 
 		<b>Q3: </b>
 		Pick one scene and compare rendered views first with only direct illumination, then only indirect illumination. Use 1024 samples per pixel.
@@ -456,6 +490,7 @@
 			  </tr> 
 			</table>
 		</div>
+		<br>
 
 		<b>Q4: </b>
 		For CBbunny.dae, render the mth bounce of light with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag), and isAccumBounces=false. 
@@ -497,10 +532,11 @@
 			  </tr>
 			</table>
 		</div>
+		<br>
 
 		To tell the difference between the 2nd and 3rd bounce of light, it is more obvious in rendered spheres image.
 
-		<div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			<tr>
 			  <td style="text-align: center;">
@@ -509,22 +545,37 @@
 			  </td>
 			  <td style="text-align: center;">
 				<img src="part4/CBsphere_mat4_s1024.png" width="400px"/>
-				<figcaption>3rdt Bounce of Light</figcaption>
+				<figcaption>3rd Bounce of Light</figcaption>
 			  </td>
 			</tr> 
+			</table>
 		</div>
+		<br>
 
+		From the images above, we observe that the 2nd bounce of light primarily reflects off the bottom surfaces of the spheres. 
+		This occurs because the light first bounces off the floor before reaching the undersides of the spheres.<br>
+		For the 3rd bounce, most of the reflected light originates from the shadowed areas on the floor. 
+		This happens as the light first reflects off the floor, then the bottom of the sphere, and finally from the shadowed regions on the floor.<br>
+		<br>
+		When describing the contribution of different light bounces to the rendered image, you can attribute them based on their influence on realism and indirect illumination:<br>
+		2nd Bounce Contribution: Enhances realism by introducing subtle indirect lighting, particularly under objects, making them appear more grounded in the scene.<br>
+		3rd Bounce Contribution: Further refines global illumination by illuminating shadowed areas, reducing harsh contrasts seen in rasterization.<br>
+		Compared to rasterization, which lacks physically accurate indirect lighting, these additional bounces contribute to a more realistic distribution of light, capturing soft shadows and subtle ambient effects that improve overall image quality.<br>
+		<br>
+
+		Adding the mth bounce of light together, we can get the accumulated image.
 		<figure>
 			<img src="part4/4_CBbunny_m0_s1024.png" alt="bunny-accu" style="width:70%"/>
 			<figcaption>accumulated</figcaption>
 		</figure>
+		<br>
 		
 		<b>Q5: </b>
 		For CBbunny.dae, output the Russian Roulette rendering with max_ray_depth set to 0, 1, 2, 3, 4, and 100(the -m flag). Use 1024 samples per pixel.
 		<br>
 
 		<b>A5: </b>
-		<div>
+		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			<tr>
 			  <td style="text-align: center;">
@@ -555,8 +606,10 @@
 				<img src="part4/CBbunny_m100rr_s1024.png" width="400px"/>
 				<figcaption>max_ray_depth set to 100</figcaption>
 			  </td>
+			  </tr>
+			</table>
 		</div>
-
+		<br>
 
 		<b>Q6: </b>
 		Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.
@@ -597,6 +650,7 @@
 			  </tr> 
 			</table>
 		</div>
+		<br>
 
 		<h2>Part 5: Adaptive Sampling</h2>
 		
@@ -604,7 +658,14 @@
 		Explain adaptive sampling. Walk through your implementation of the adaptive sampling.
 		<br>
 
-		<b>A1: </b>
+		<b>A1: </b><br>
+		Adaptive sampling optimizes rendering by dynamically adjusting the number of samples per pixel based on variance estimation. <br>
+		In <code>raytrace_pixel()</code>, rays are traced iteratively, accumulating radiance (<code>s1</code>) and squared intensity values (<code>s2</code>). 
+		Every samplesPerBatch, the mean (<code>μ</code>) and variance (<code>var</code>) are computed, and a confidence interval (<code>I</code>) is estimated. 
+		If I falls below a convergence threshold (<code>cvoff</code>), sampling terminates early, ensuring efficient computation. <br>
+		This method allocates more samples to high-variance regions while reducing redundancy in smooth areas, maintaining unbiased estimation while significantly improving rendering efficiency and convergence speed.<br>
+		As formulas are listed clearly in the guides of hw3, I will not repeat them here.<br>
+		<br>
 
 		<b>Q2: </b>
 		Pick two scenes and render them with at least 2048 samples per pixel.
@@ -630,20 +691,10 @@
 				</td>
 			  </tr>
 			</table>
+		</div>
 
-		<h2>(Optional) Part 6: Extra Credit Opportunities</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 		
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
+		
 		</div>
 	</body>
 </html>
