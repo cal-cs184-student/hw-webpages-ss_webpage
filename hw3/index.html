@@ -434,7 +434,7 @@
 				  <figcaption>Direct Illumination</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="part4/4_CBbunny_m1_s1024.png" width="400px"/>
+				  <img src="part4/spheres_undirect_s1024.png" width="400px"/>
 				  <figcaption>Indirect Illumination</figcaption>
 				</td>
 			  </tr> 
@@ -442,7 +442,8 @@
 		</div>
 
 		<b>Q4: </b>
-		For CBbunny.dae, render the mth bounce of light with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag), and isAccumBounces=false. Explain in your write-up what you see for the 2nd and 3rd bounce of light, and how it contributes to the quality of the rendered image compared to rasterization. Use 1024 samples per pixel.
+		For CBbunny.dae, render the mth bounce of light with max_ray_depth set to 0, 1, 2, 3, 4, and 5 (the -m flag), and isAccumBounces=false. 
+		Explain in your write-up what you see for the 2nd and 3rd bounce of light, and how it contributes to the quality of the rendered image compared to rasterization. Use 1024 samples per pixel.
 		<br>
 
 		<b>A4: </b>
@@ -458,7 +459,43 @@
 				  <figcaption>1st Bounce of Light</figcaption>
 				</td>
 			  </tr> 
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part4/CBbunny_mat2_s1024.png" width="400px"/>
+				  <figcaption>2nd Bounce of Light</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part4/CBbunny_mat2or3_s1024.png" width="400px"/>
+				  <figcaption>3rd Bounce of Light</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="part4/CBbunny_mat3or4_s1024.png" width="400px"/>
+				  <figcaption>4th Bounce of Light</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="part4/CBbunny_mat4or5_s1024.png" width="400px"/>
+				  <figcaption>5th Bounce of Light</figcaption>
+				</td>
+			  </tr>
 			</table>
+		</div>
+
+		To tell the difference between the 2nd and 3rd bounce of light, it is more obvious in rendered spheres image.
+
+		<div>
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			<tr>
+			  <td style="text-align: center;">
+				<img src="part4/CBsphere_mat3_s1024.png" width="400px"/>
+				<figcaption>2nd Bounce of Light</figcaption>
+			  </td>
+			  <td style="text-align: center;">
+				<img src="part4/CBsphere_mat4_s1024.png" width="400px"/>
+				<figcaption>3rdt Bounce of Light</figcaption>
+			  </td>
+			</tr> 
 		</div>
 
 		<figure>
