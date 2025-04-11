@@ -28,9 +28,10 @@
     }
 
     .container {
-      margin: 0 auto;
-      padding: 40px 10%;
-      max-width: 1200px;
+		margin: 0 auto;
+		padding: 60px 20%;
+		line-height: 1.5;
+		max-width: 1200px;
     }
 
     h1, h2, h3, h4 {
@@ -201,7 +202,7 @@
 <body>
   <div class="container">
     <h1>CS184/284A Spring 2025 Homework 4 Write-Up</h1>
-    <div class="author">Name: Shuang Liu</div>
+    <div class="author">Name: Shuang Liu & Yikai Tang</div>
     
     <p>Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-ss_webpage/">cal-cs184-student.github.io/hw-webpages-ss_webpage</a></p>
     
@@ -227,25 +228,25 @@
 
     <h2>1. Section I: Masses and springs</h2>
     <p><strong>Results:</strong></p>
-    
-    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-      <figure>
-        <img src="imgs/1-all.png" alt="Wireframe with all constraints" class="equal_3_size" />
-        <figcaption>Img 1.1: Wireframe with all constraints</figcaption>
-      </figure>
-      <figure>
-        <img src="imgs/1-shearing.png" alt="Wireframe with only shearing constraints" class="equal_3_size" />
-        <figcaption>Img 1.2: Wireframe with only shearing constraints</figcaption>
-      </figure>
-      <figure>
-        <img src="imgs/1-wo_shearing.png" alt="Wireframe without shearing constraints" class="equal_3_size" />
-        <figcaption>Img 1.3: Wireframe without shearing constraints</figcaption>
-      </figure>
-    </div>
+
+	<figure>
+		<img src="imgs/1-all.png" alt="Cloth Simulation" style="width:50%" />
+		<figcaption>Img 1.1: Wireframe with all constraints</figcaption>
+	</figure>
+	<figure>
+		<img src="imgs/1-shearing.png" alt="Cloth Simulation" style="width:50%" />
+		<figcaption>Img 1.2: Wireframe with only shearing constraints</figcaption>
+	</figure>
+	<figure>
+		<img src="imgs/1-wo_shearing.png" alt="Cloth Simulation" style="width:50%" />
+		<figcaption>Img 1.3: Wireframe without shearing constraints</figcaption>
+	</figure>
+
 
     <h2>2. Section II: Simulation via numerical integration</h2>
     <p><strong>Results:</strong></p>
     
+	
     <figure>
       <table>
         <tr>
@@ -255,6 +256,7 @@
       </table>
       <figcaption>Img 2.1: Rendering under original parameters</figcaption>
     </figure>
+
     
     <figure>
       <table>
@@ -334,63 +336,56 @@
     </p>
     
     <figure>
-      <img src="imgs/2-pinned4.png" alt="Pinned4 rendering" class="equal_3_size" />
+      <img src="imgs/2-pinned4.png" alt="Pinned4 rendering" style="width:50%" />
       <figcaption>Img 2.8: Rendering scene/pinned4.png</figcaption>
     </figure>
     
     <p>The following videos show the simulation of the cloth with different parameters mentioned above:</p>
     
-    <div class="video-container">
-      <div>
-        <video controls style="width: 100%">
-          <source src="videos/2-origin.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <p>Original params</p>
-      </div>
-      <div>
-        <video controls style="width: 100%">
-          <source src="videos/2-low_ks.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <p>Low ks</p>
-      </div>
-      <div>
-        <video controls style="width: 100%">
-          <source src="videos/2-high_ks.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <p>High ks</p>
-      </div>
-      <div>
-        <video controls style="width: 100%">
-          <source src="videos/2-low_dense.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <p>Low density</p>
-      </div>
-      <div>
-        <video controls style="width: 100%">
-          <source src="videos/2-high_dense.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <p>High density</p>
-      </div>
-      <div>
-        <video controls style="width: 100%">
-          <source src="videos/2-low_damp.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <p>Low damping</p>
-      </div>
-      <div>
-        <video controls style="width: 100%">
-          <source src="videos/2-high_damp.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <p>High damping</p>
-      </div>
-    </div>
+	<div class="video-container" style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
+		<div style="width: 500px; text-align: center;">
+		  <video controls style="width: 100%; height: auto;">
+			<source src="videos/2-origin.mp4" type="video/mp4" />
+		  </video>
+		  <p>Video 2.1: Original params</p>
+		</div>
+		<div style="width: 500px; text-align: center;">
+		  <video controls style="width: 100%; height: auto;">
+			<source src="videos/2-low_ks.mp4" type="video/mp4" />
+		  </video>
+		  <p>Video 2.2: Low ks</p>
+		</div>
+		<div style="width: 500px; text-align: center;">
+		  <video controls style="width: 100%; height: auto;">
+			<source src="videos/2-high_ks.mp4" type="video/mp4" />
+		  </video>
+		  <p>Video 2.3: High ks</p>
+		</div>
+		<div style="width: 500px; text-align: center;">
+		  <video controls style="width: 100%; height: auto;">
+			<source src="videos/2-low_dense.mp4" type="video/mp4" />
+		  </video>
+		  <p>Video 2.4: Low density</p>
+		</div>
+		<div style="width: 500px; text-align: center;">
+		  <video controls style="width: 100%; height: auto;">
+			<source src="videos/2-high_dense.mp4" type="video/mp4" />
+		  </video>
+		  <p>Video 2.5: High density</p>
+		</div>
+		<div style="width: 500px; text-align: center;">
+		  <video controls style="width: 100%; height: auto;">
+			<source src="videos/2-low_damping.mp4" type="video/mp4" />
+		  </video>
+		  <p>Video 2.6: Low damping</p>
+		</div>
+		<div style="width: 500px; text-align: center;">
+		  <video controls style="width: 100%; height: auto;">
+			<source src="videos/2-high_damping.mp4" type="video/mp4" />
+		  </video>
+		  <p>Video 2.7: High damping</p>
+		</div>
+	</div>
 
     <h2>3. Section III: Handling collisions with other objects</h2>
     
@@ -408,9 +403,9 @@
         <strong>Plane</strong>: Check if a PointMass crosses the plane by sign change in:
         <div class="math">$$ signed\_distance = (last\_position - point) \cdot normal $$</div>
         If sign changes:
-        <div class="math">$$ tangent = last\_position + t \cdot (position - last\_position); $$</div>
+        <div class="math">$$ tangent = last\_position + t \cdot (position - last\_position) $$</div>
         Add offset to avoid artifacts:
-        <div class="math">$$ target += surface\_offset \cdot offset\_dir $$</div>
+        <div class="math">$$ target = target + (surface\_offset \cdot offset\_dir) $$</div>
         Final update:
         <div class="math">$$ position = last\_position + (1 - friction) \cdot (tangent - last\_position) $$</div>
       </li>
@@ -419,17 +414,17 @@
     <p><strong>Results:</strong></p>
     
     <figure>
-      <img src="imgs/3-sphere_500.png" alt="Sphere collision with ks=500" />
+      <img src="imgs/3-sphere_500.png" alt="Sphere collision with ks=500" style="width:50%" />
       <figcaption>Img 3.1: Sphere collision with ks=500</figcaption>
     </figure>
     
     <figure>
-      <img src="imgs/3-sphere_5000.png" alt="Sphere collision with ks=5000" />
+      <img src="imgs/3-sphere_5000.png" alt="Sphere collision with ks=5000" style="width:50%" />
       <figcaption>Img 3.2: Sphere collision with ks=5000</figcaption>
     </figure>
     
     <figure>
-      <img src="imgs/3-sphere_50000.png" alt="Sphere collision with ks=50000" />
+      <img src="imgs/3-sphere_50000.png" alt="Sphere collision with ks=50000" style="width:50%" />
       <figcaption>Img 3.3: Sphere collision with ks=50000</figcaption>
     </figure>
     
@@ -583,7 +578,7 @@ pm.position += correction;
     <h3>5.2 Phong Shading</h3>
     <p>Blinn-Phong shading formula:</p>
     <div class="math">
-      $$I = k_a I_a + k_d \frac{I}{r^2} \max(0, \vec{n} \cdot \vec{l}) + k_s I_s \frac{I}{r^2} \max(0, \vec{n} \cdot \vec{h})^p$$
+      $$I = k_a I_a + k_d \frac{I}{r^2} \max(0, \vec{n} \cdot \vec{l}) + k_s I_s \frac{I}{r^2} \max(0, \vec{n} \cdot \vec{h})^p $$
     </div>
     
     <table>
