@@ -1,109 +1,686 @@
-<html>
-	<head>
-		<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default'></script>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-		<style>
-			h1 {
-				text-align: center;
-			}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CS184/284A Spring 2025 Homework 4 Write-Up</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=default"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --text-color: #333;
+      --light-gray: #f5f5f5;
+      --medium-gray: #e0e0e0;
+      --dark-gray: #777;
+      --line-height: 1.6;
+    }
+    
+    body {
+      font-family: 'Lato', sans-serif;
+      line-height: var(--line-height);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      font-size: 16px;
+      background-color: #fff;
+    }
 
-			.container {
-				margin: 0 auto;
-				padding: 60px 20%;
-			}
+    .container {
+      margin: 0 auto;
+      padding: 40px 10%;
+      max-width: 1200px;
+    }
 
-			figure {
-				text-align: center;
-			}
+    h1, h2, h3, h4 {
+      color: var(--primary-color);
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+    }
 
-			img {
-				display: inline-block;
-			}
+    h1 {
+      text-align: center;
+      font-size: 2.2em;
+      margin-bottom: 0.5em;
+      padding-bottom: 0.5em;
+      border-bottom: 2px solid var(--medium-gray);
+    }
 
-			body {
-				font-family: 'Inter', sans-serif;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container">
-		<h1>CS184/284A Spring 2025 Homework 4 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+    h2 {
+      font-size: 1.8em;
+      border-bottom: 1px solid var(--medium-gray);
+      padding-bottom: 0.3em;
+    }
 
-		<br>
+    h3 {
+      font-size: 1.4em;
+    }
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+    h4 {
+      font-size: 1.2em;
+    }
 
-		<br>
+    p {
+      margin-bottom: 1em;
+      line-height: var(--line-height);
+    }
 
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+    a {
+      color: var(--secondary-color);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
 
-		<figure>
-			<img src="clothsim.png" alt="Cloth draped over sphere" style="width:70%"/>
-			<figcaption>You can add images with captions!</figcaption>
-		</figure>
+    a:hover {
+      color: #2980b9;
+      text-decoration: underline;
+    }
 
-		<!--
-		We've already added one heading per part, to make your write-up as navigable when grading. Please fit your write-up within these sections!
-		-->
+    b, strong {
+      font-weight: 600;
+    }
 
-		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+    figure {
+      margin: 2em 0;
+      text-align: center;
+    }
 
-		<h2>Part 1: Masses and springs</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    figcaption {
+      margin-top: 0.8em;
+      font-size: 0.9em;
+      color: var(--dark-gray);
+    }
 
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
-		<div style="display: flex; flex-direction: column; align-items: center;">
-			<table style="width: 100%; text-align: center; border-collapse: collapse;">
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="clothsim.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="clothsim.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="clothsim.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="clothsim.png" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			</table>
-		</div>
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
 
-		<h2>Part 2: Simulation via numerical integration</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    .equal_3_size {
+      width: 100%;
+      height: auto;
+      max-width: 300px;
+      max-height: 350px;
+    }
 
-		<h2>Part 3: Handling collisions with other objects</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5em 0;
+    }
 
-		<h2>Part 4: Handling self-collisions</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    td {
+      padding: 10px;
+      vertical-align: top;
+    }
 
-		<h2>Part 5: Shaders</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    pre code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      background-color: var(--light-gray);
+      padding: 15px;
+      border-radius: 5px;
+      display: block;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      line-height: 1.4;
+      border-left: 4px solid var(--secondary-color);
+    }
 
-		<h2>(Optional) Part 6: Extra Credit - Additional cloth simulation features!</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-		
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
-		</div>
-	</body>
+    ul, ol {
+      margin: 1em 0;
+      padding-left: 2em;
+    }
+
+    li {
+      margin-bottom: 0.5em;
+    }
+
+    .video-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin: 2em 0;
+      justify-content: center;
+    }
+
+    video {
+      max-width: 100%;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .centered {
+      text-align: center;
+      margin: 2em 0;
+    }
+
+    .author {
+      text-align: center;
+      font-size: 1.1em;
+      margin-bottom: 2em;
+      color: var(--dark-gray);
+    }
+
+    .math {
+      margin: 1em 0;
+      padding: 10px;
+      background-color: var(--light-gray);
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 5%;
+      }
+      
+      h1 {
+        font-size: 1.8em;
+      }
+      
+      h2 {
+        font-size: 1.5em;
+      }
+      
+      .video-container {
+        flex-direction: column;
+      }
+      
+      video {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>CS184/284A Spring 2025 Homework 4 Write-Up</h1>
+    <div class="author">Name: Shuang Liu</div>
+    
+    <p>Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-ss_webpage/">cal-cs184-student.github.io/hw-webpages-ss_webpage</a></p>
+    
+    <figure>
+      <img src="clothsim.png" alt="Cloth Simulation" style="width:70%" />
+    </figure>
+
+    <h2>Overview</h2>
+    <p>
+      In this homework, we implement a cloth simulation system using a mass-spring model.
+      We first implement a basic simulation of a cloth-like object using a mass-spring system, where each vertex is represented as a point mass connected by three types of springs (structural, shearing and bending).
+    </p>
+    <p>
+      We then implement a numerical integration method to simulate the motion of the cloth over time, taking into account forces such as gravity and damping.
+    </p>
+    <p>
+      We also implement a collision detection and response system to handle interactions between the cloth and other objects in the scene, such as a sphere or a plane.
+      Then, we implement a self-collision detection system to handle cases where the cloth collides with itself. We use a hash table to efficiently detect self-collisions with vertex pairs that are close to each other.
+    </p>
+    <p>
+      Finally, we implement a shader program to render the cloth with various shading techniques, including diffuse, Phong shading, texture mapping, bump mapping, displacement mapping and mirror-like reflections.
+    </p>
+
+    <h2>1. Section I: Masses and springs</h2>
+    <p><strong>Results:</strong></p>
+    
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+      <figure>
+        <img src="imgs/1-all.png" alt="Wireframe with all constraints" class="equal_3_size" />
+        <figcaption>Img 1.1: Wireframe with all constraints</figcaption>
+      </figure>
+      <figure>
+        <img src="imgs/1-shearing.png" alt="Wireframe with only shearing constraints" class="equal_3_size" />
+        <figcaption>Img 1.2: Wireframe with only shearing constraints</figcaption>
+      </figure>
+      <figure>
+        <img src="imgs/1-wo_shearing.png" alt="Wireframe without shearing constraints" class="equal_3_size" />
+        <figcaption>Img 1.3: Wireframe without shearing constraints</figcaption>
+      </figure>
+    </div>
+
+    <h2>2. Section II: Simulation via numerical integration</h2>
+    <p><strong>Results:</strong></p>
+    
+    <figure>
+      <table>
+        <tr>
+          <td><img src="imgs/2-origin_1.png" style="width: 100%" /></td>
+          <td><img src="imgs/2-origin_2.png" style="width: 100%" /></td>
+        </tr>
+      </table>
+      <figcaption>Img 2.1: Rendering under original parameters</figcaption>
+    </figure>
+    
+    <figure>
+      <table>
+        <tr>
+          <td><img src="imgs/2-low_ks_1.png" style="width: 100%" /></td>
+          <td><img src="imgs/2-low_ks_2.png" style="width: 100%" /></td>
+        </tr>
+      </table>
+      <figcaption>Img 2.2: Rendering with low ks</figcaption>
+    </figure>
+    
+    <figure>
+      <table>
+        <tr>
+          <td><img src="imgs/2-high_ks_1.png" style="width: 100%" /></td>
+          <td><img src="imgs/2-high_ks_2.png" style="width: 100%" /></td>
+        </tr>
+      </table>
+      <figcaption>Img 2.3: Rendering with high ks</figcaption>
+    </figure>
+    
+    <p>
+      As can be seen, the fabric seems to be more "softened" as the spring force isn't strong enough to hold the fabric together.
+      The fabric is more likely to be "pulled down" by gravity, resulting in the "waves" on it.
+      When ks is high, the fabric becomes more "stiffened", resisting deformation from gravity.
+    </p>
+    
+    <figure>
+      <table>
+        <tr>
+          <td><img src="imgs/2-low_dense_1.png" style="width: 100%" /></td>
+          <td><img src="imgs/2-low_dense_2.png" style="width: 100%" /></td>
+        </tr>
+      </table>
+      <figcaption>Img 2.4: Rendering with low density</figcaption>
+    </figure>
+    
+    <figure>
+      <table>
+        <tr>
+          <td><img src="imgs/2-high_dense_1.png" style="width: 100%" /></td>
+          <td><img src="imgs/2-high_dense_2.png" style="width: 100%" /></td>
+        </tr>
+      </table>
+      <figcaption>Img 2.5: Rendering with high density</figcaption>
+    </figure>
+    
+    <p>
+      The lower the density, the lighter the fabric is, resulting in it falling down slower due to energy loss (e.g., friction).
+      As the density increases, the material becomes more robust to energy loss and more likely to be pulled downward by gravity, causing a wavier appearance.
+    </p>
+    
+    <figure>
+      <table>
+        <tr>
+          <td><img src="imgs/2-low_damp_1.png" style="width: 100%" /></td>
+          <td><img src="imgs/2-low_damp_2.png" style="width: 100%" /></td>
+        </tr>
+      </table>
+      <figcaption>Img 2.6: Rendering with low damping</figcaption>
+    </figure>
+    
+    <figure>
+      <table>
+        <tr>
+          <td><img src="imgs/2-high_damp_1.png" style="width: 100%" /></td>
+          <td><img src="imgs/2-high_damp_2.png" style="width: 100%" /></td>
+        </tr>
+      </table>
+      <figcaption>Img 2.7: Rendering with high damping</figcaption>
+    </figure>
+    
+    <p>
+      Totally no energy loss results in the cloth swinging back and forth forever, and presenting dramatic waves since the energy is not lost at all. It also falls down super fast.
+      <br>
+      By contrast, the material becomes stiff and clumsy, falls down very slowly, and the waves are not obvious.
+    </p>
+    
+    <figure>
+      <img src="imgs/2-pinned4.png" alt="Pinned4 rendering" class="equal_3_size" />
+      <figcaption>Img 2.8: Rendering scene/pinned4.png</figcaption>
+    </figure>
+    
+    <p>The following videos show the simulation of the cloth with different parameters mentioned above:</p>
+    
+    <div class="video-container">
+      <div>
+        <video controls style="width: 100%">
+          <source src="videos/2-origin.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <p>Original params</p>
+      </div>
+      <div>
+        <video controls style="width: 100%">
+          <source src="videos/2-low_ks.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <p>Low ks</p>
+      </div>
+      <div>
+        <video controls style="width: 100%">
+          <source src="videos/2-high_ks.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <p>High ks</p>
+      </div>
+      <div>
+        <video controls style="width: 100%">
+          <source src="videos/2-low_dense.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <p>Low density</p>
+      </div>
+      <div>
+        <video controls style="width: 100%">
+          <source src="videos/2-high_dense.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <p>High density</p>
+      </div>
+      <div>
+        <video controls style="width: 100%">
+          <source src="videos/2-low_damp.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <p>Low damping</p>
+      </div>
+      <div>
+        <video controls style="width: 100%">
+          <source src="videos/2-high_damp.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        <p>High damping</p>
+      </div>
+    </div>
+
+    <h2>3. Section III: Handling collisions with other objects</h2>
+    
+    <h3>Implementation:</h3>
+    <ul>
+      <li>
+        <strong>Sphere</strong>: Use the sphere's center and radius to check if the vertex is within the sphere. If so:
+        <div class="math">$$ tangent = origin + \left(\frac{dir}{dist}\right) \cdot radius; $$</div>
+        Where <em>origin</em> is the vertex position, <em>dir</em> is the vector from center to vertex, and <em>dist</em> is their distance.
+        <br>
+        The new vertex position:
+        <div class="math">$$ position = last\_position + (1 - friction) \cdot (tangent - last\_position) $$</div>
+      </li>
+      <li>
+        <strong>Plane</strong>: Check if a PointMass crosses the plane by sign change in:
+        <div class="math">$$ signed\_distance = (last\_position - point) \cdot normal $$</div>
+        If sign changes:
+        <div class="math">$$ tangent = last\_position + t \cdot (position - last\_position); $$</div>
+        Add offset to avoid artifacts:
+        <div class="math">$$ target += surface\_offset \cdot offset\_dir $$</div>
+        Final update:
+        <div class="math">$$ position = last\_position + (1 - friction) \cdot (tangent - last\_position) $$</div>
+      </li>
+    </ul>
+    
+    <p><strong>Results:</strong></p>
+    
+    <figure>
+      <img src="imgs/3-sphere_500.png" alt="Sphere collision with ks=500" />
+      <figcaption>Img 3.1: Sphere collision with ks=500</figcaption>
+    </figure>
+    
+    <figure>
+      <img src="imgs/3-sphere_5000.png" alt="Sphere collision with ks=5000" />
+      <figcaption>Img 3.2: Sphere collision with ks=5000</figcaption>
+    </figure>
+    
+    <figure>
+      <img src="imgs/3-sphere_50000.png" alt="Sphere collision with ks=50000" />
+      <figcaption>Img 3.3: Sphere collision with ks=50000</figcaption>
+    </figure>
+    
+    <p>
+      As shown above, higher ks leads to a stiffer fabric. It's less likely to wrap over the sphere and maintains its original shape.
+    </p>
+    
+    <figure>
+      <table>
+        <tr>
+          <td><img src="imgs/3-plane_shaded_bump.png" style="width: 100%" /></td>
+          <td><img src="imgs/3-plane_shaded_phong.png" style="width: 100%" /></td>
+        </tr>
+      </table>
+      <figcaption>Img 3.4: Shaded rendering with plane collision</figcaption>
+    </figure>
+    
+    <p>The cloth is shaded with bump mapping and Phong shading. As seen, the cloth correctly collides with the plane.</p>
+
+    <h2>4. Section IV: Handling Self-Collisions</h2>
+    
+    <h3>Implementation:</h3>
+    <p>
+      To efficiently detect self-collisions, we use a <strong>hashtable</strong> to reduce the computational complexity from 
+      \(O(n^2)\) to \(O(n)\). This ensures that only nearby <code>PointMass</code> objects are checked for potential collisions.
+    </p>
+    
+    <p>The hashtable is built based on positions using <code>hash_position()</code>. For example, along the x-axis:</p>
+    
+    <pre><code>
+float w = 5 * width / num_width_points;
+int bx = floor(pos.x / w);
+    </code></pre>
+    
+    <p>
+      The <code>build_hash_table()</code> function stores <code>PointMass</code> objects in hash buckets.
+      Then in <code>self_collide()</code>, only masses in the same bucket are checked.
+      If the distance is smaller than twice the thickness, a correction is averaged and applied:
+    </p>
+    
+    <pre><code>
+correction /= (count * simulation_steps);
+pm.position += correction;
+    </code></pre>
+    
+    <h3>Results:</h3>
+    
+    <h4>(1) Self-Collision Behavior:</h4>
+    <p>The cloth successfully demonstrates self-collision:</p>
+    
+    <div class="centered">
+      <table>
+        <tr>
+          <td><img src="./imgs/4-1.png" style="width: 100%" /></td>
+          <td><img src="./imgs/4-2.png" style="width: 100%" /></td>
+        </tr>
+        <tr>
+          <td><img src="./imgs/4-3.png" style="width: 100%" /></td>
+          <td><img src="./imgs/4-4.png" style="width: 100%" /></td>
+        </tr>
+        <tr>
+          <td><img src="./imgs/4-5.png" style="width: 100%" /></td>
+          <td><img src="./imgs/4-6.png" style="width: 100%" /></td>
+        </tr>
+      </table>
+    </div>
+    
+    <p>Self-collision video:</p>
+    
+    <div class="video-container">
+      <video controls style="width: 100%">
+        <source src="videos/4-selfcollision.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    
+    <h4>(2) Parameter Study: Density and ks</h4>
+    
+    <h5>i. Varying Density</h5>
+    
+    <div class="centered">
+      <table>
+        <tr>
+          <td>
+            <img src="./imgs/4-density-1.png" style="width: 100%" />
+            <p><em>density = 1</em></p>
+          </td>
+          <td>
+            <img src="./imgs/4-density-1(1).png" style="width: 100%" />
+            <p><em>density = 1 (alt view)</em></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img src="./imgs/4-density-100.png" style="width: 100%" />
+            <p><em>density = 100</em></p>
+          </td>
+          <td>
+            <img src="./imgs/4-density-500.png" style="width: 100%" />
+            <p><em>density = 500</em></p>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+    <p><strong>Low density</strong>: Cloth appears soft and easily collapses onto itself.</p>
+    <p><strong>High density</strong>: Cloth becomes heavier and may fall through the collision plane if too fast.</p>
+    
+    <h5>ii. Varying ks (Spring Constant)</h5>
+    
+    <div class="centered">
+      <table>
+        <tr>
+          <td>
+            <img src="./imgs/4-ks-1000.png" style="width: 100%" />
+            <p><em>ks = 1000</em></p>
+          </td>
+          <td>
+            <img src="./imgs/4-ks-5000.png" style="width: 100%" />
+            <p><em>ks = 5000</em></p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img src="./imgs/4-ks-50000.png" style="width: 100%" />
+            <p><em>ks = 50000</em></p>
+          </td>
+          <td>
+            <img src="./imgs/4-ks-50000(1).png" style="width: 100%" />
+            <p><em>ks = 50000 (alt view)</em></p>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+    <p><strong>Low ks</strong>: Cloth is soft and sags more.</p>
+    <p><strong>High ks</strong>: Cloth holds its shape better but may cause instability.</p>
+    
+    <h2>5. Section V: Shaders</h2>
+    
+    <h3>5.1 Explanation:</h3>
+    <p>
+      A <strong>shader program</strong> runs on the GPU and includes the <strong>vertex shader</strong> and <strong>fragment shader</strong>.
+      The vertex shader computes geometry transformations; the fragment shader computes lighting and color.
+    </p>
+    <p>
+      For example, the mirror shader computes reflection using surface normals and view direction.
+      Shaders run in parallel on GPU for real-time performance.
+    </p>
+    
+    <h3>5.2 Phong Shading</h3>
+    <p>Blinn-Phong shading formula:</p>
+    <div class="math">
+      $$I = k_a I_a + k_d \frac{I}{r^2} \max(0, \vec{n} \cdot \vec{l}) + k_s I_s \frac{I}{r^2} \max(0, \vec{n} \cdot \vec{h})^p$$
+    </div>
+    
+    <table>
+      <tr>
+        <td><img src="./imgs/5-ambient.png" style="width: 100%" /></td>
+        <td><img src="./imgs/5-diffuse.png" style="width: 100%" /></td>
+      </tr>
+      <tr>
+        <td><em>Ambient only</em></td>
+        <td><em>Diffuse only</em></td>
+      </tr>
+      <tr>
+        <td><img src="./imgs/5-specular.png" style="width: 100%" /></td>
+        <td><img src="./imgs/5-phong.png" style="width: 100%" /></td>
+      </tr>
+      <tr>
+        <td><em>Specular only</em></td>
+        <td><em>Full Phong lighting</em></td>
+      </tr>
+    </table>
+    
+    <h3>5.3 Texture Mapping</h3>
+    <p>
+      Texture mapping samples colors from an image using UV coordinates:
+    </p>
+    
+    <figure>
+      <img src="./imgs/5-texture.png" />
+      <figcaption>Texture-mapped rendering</figcaption>
+    </figure>
+    
+    <h3>5.4 Bump & Displacement Mapping</h3>
+    <p>
+      <strong>Bump mapping</strong>: Fake surface detail via normal perturbation.
+      <br>
+      <strong>Displacement mapping</strong>: Actually changes vertex positions.
+    </p>
+    
+    <table>
+      <tr>
+        <td><img src="./imgs/5-bump-sphere.png" style="width: 100%" /></td>
+        <td><img src="./imgs/5-bump-cloth.png" style="width: 100%" /></td>
+      </tr>
+      <tr>
+        <td><em>Bump-mapped sphere</em></td>
+        <td><em>Bump-mapped cloth</em></td>
+      </tr>
+      <tr>
+        <td><img src="./imgs/5-displacement-sphere.png" style="width: 100%" /></td>
+        <td><img src="./imgs/5-displacement-cloth.png" style="width: 100%" /></td>
+      </tr>
+      <tr>
+        <td><em>Displacement sphere</em></td>
+        <td><em>Displacement cloth</em></td>
+      </tr>
+    </table>
+    
+    <p>Low vs. high resolution comparison:</p>
+    
+    <table>
+      <tr>
+        <td><img src="./imgs/5-bump-a16o16.png" style="width: 100%" /></td>
+        <td><img src="./imgs/5-bump-a128o128.png" style="width: 100%" /></td>
+      </tr>
+      <tr>
+        <td><em>Bump (16×16)</em></td>
+        <td><em>Bump (128×128)</em></td>
+      </tr>
+      <tr>
+        <td><img src="./imgs/5-displacement-a16o16.png" style="width: 100%" /></td>
+        <td><img src="./imgs/5-displacement-a128o128.png" style="width: 100%" /></td>
+      </tr>
+      <tr>
+        <td><em>Displacement (16×16)</em></td>
+        <td><em>Displacement (128×128)</em></td>
+      </tr>
+    </table>
+    
+    <ul>
+      <li>Higher mesh resolution improves visual smoothness.</li>
+      <li>Bump mapping unaffected much by resolution.</li>
+      <li>Displacement mapping benefits from high resolution.</li>
+    </ul>
+    
+    <h3>5.5 Mirror Shader</h3>
+    <p>Simulates reflective surfaces by sampling the environment using reflected view direction.</p>
+    
+    <table>
+      <tr>
+        <td><img src="./imgs/5-mirror-sphere.png" style="width: 100%" /></td>
+        <td><img src="./imgs/5-mirror-cloth.png" style="width: 100%" /></td>
+      </tr>
+      <tr>
+        <td><em>Mirror sphere</em></td>
+        <td><em>Mirror cloth</em></td>
+      </tr>
+    </table>
+  </div>
+</body>
 </html>
